@@ -15,10 +15,24 @@ ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS pk_ques
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_question_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.tag DROP CONSTRAINT IF EXISTS pk_tag_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_tag_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS pk_user_id CASCADE;
+
+DROP TABLE IF EXISTS public.users;
+CREATE TABLE users (
+    id serial NOT NULL,
+    login text,
+    password text,
+    registration_date timestamp without time zone,
+    question_number integer,
+    answer_number integer,
+    comments_number integer,
+    reputation integer
+);
 
 DROP TABLE IF EXISTS public.question;
 CREATE TABLE question (
     id serial NOT NULL,
+    user_id integer,
     submission_time timestamp without time zone,
     view_number integer,
     vote_number integer,
@@ -30,6 +44,7 @@ CREATE TABLE question (
 DROP TABLE IF EXISTS public.answer;
 CREATE TABLE answer (
     id serial NOT NULL,
+    user_id integer,
     submission_time timestamp without time zone,
     vote_number integer,
     question_id integer,
@@ -40,6 +55,7 @@ CREATE TABLE answer (
 DROP TABLE IF EXISTS public.comment;
 CREATE TABLE comment (
     id serial NOT NULL,
+    user_id integer,
     question_id integer,
     answer_id integer,
     message text,
@@ -60,6 +76,8 @@ CREATE TABLE tag (
     name text
 );
 
+ALTER TABLE ONLY users
+    ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
 
 ALTER TABLE ONLY answer
     ADD CONSTRAINT pk_answer_id PRIMARY KEY (id);
