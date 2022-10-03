@@ -8,6 +8,10 @@ import util
 
 app = Flask(__name__)
 
+@app.route("/bonus-questions")
+def main():
+    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
+
 
 @app.route("/", methods=['GET'])
 def main():
