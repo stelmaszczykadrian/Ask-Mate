@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+                <title>Edit Comment</title>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
+</head>
+<body>
+<h1>ASK MATE</h1>
+    <h3>Edit comment</h3>
+    <form action='/comment/{{ comment['id'] }}/edit' method="POST">
+        <p><label for="message">Message:</label><br><br>
+            <textarea id="message" name="message" rows="4" cols="60"> {{ comment['message'] }}</textarea><br><br>
+            <button type="submit">Save comment</button>
+    </form>
+
+</body>
+</html>

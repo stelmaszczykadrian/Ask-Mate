@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+                <title>Edit Question</title>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
+</head>
+<body>
+<h1>ASK MATE</h1>
+    <h3>Edit question</h3>
+    <form action='/question/{{ question_id }}/edit' method="POST">
+        <p><label for="title">Title:</label><br><br>
+            <textarea id="title" name="title" rows="1" cols="60"> {{ question['title'] }} </textarea>
+        <p><label for="message">Message:</label><br><br>
+            <textarea id="message" name="message" rows="4" cols="60"> {{ question['message'] }}</textarea><br><br>
+            <button type="submit">Save question</button>
+    </form>
+</body>
+</html>

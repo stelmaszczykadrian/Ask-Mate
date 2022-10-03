@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
+</head>
+<body>
+<h1>ASK MATE</h1>
+{#<table border=solid>#}
+{#    <thead>#}
+{#        <tr>#}
+{#            {% for header in headers %}#}
+{#            <th>{{ header }}</th>#}
+{#            {% endfor %}#}
+{#        </tr>#}
+{#    </thead>#}
+<button><a  class="button-all-question" href="/list">All questions</a></button>
+<form style="float:right" action="/search" method="get">
+  <input type="text" name="search_phrase" id="search_phrase">
+  <input type="submit" value="Search">
+</form>
+
+    {% for question in stories %}
+            <div class="all-table-question"><h4><a class="title-question" href="{{ url_for('question',question_id = question['id'], increment_view_number= True) }}">{{ question.title }}</a></h4>
+           <p>{{ question.message }}</p>
+           <br><br>
+           <p>VIEW NUMBER: {{ question.view_number }}</p>
+           <p>VOTE NUMBER: {{ question.vote_number }}</p>
+           <p class="submission-time" style="float:right">SUBMISSION TIME: {{ question.submission_time }}</p></div>
+    {% endfor %}
+
+<br>
+</body>
+
+</html>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add tag</title>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
+</head>
+<body>
+<h1>ASK MATE</h1>
+<form action="/question/{{ question_id }} ">
+            <button id="home" type="submit" class="button">BACK</button>
+</form>
+<h2 align="middle">Give a new tag!</h2>
+<form action="{{ url_for('add_tag_to_question', question_id=question_id) }}" method="POST">
+            <label for="tags">Add tag</label>
+            <input name="new_tag" type="text" list="tags"/>
+            <datalist id="tags">
+                {% for tag in tags %}
+                    <option>{{ tag['name'] }}</option>
+                {% endfor %}
+            </datalist>
+            <input type="submit" value="Submit" name="Submit" class="button">
+</form>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
+</head>
+<body>
+<h1>ASK MATE</h1>
+<table border="solid">
+    <thead>
+        <tr>
+            {% for header in headers %}
+            <th>{{ header }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for story in stories %}
+        <tr>
+            {% for key,value in story.items() %}
+                <th>
+                    {% if key == 'id' %}
+                            <a href="{{ url_for('question',question_id = value, increment_view_number= True) }}">{{ value }} </a>
+                    {% elif key in ['title', 'message'] %}
+                        {% autoescape false %}
+                        {{ value|replace(search_phrase, '<mark>' + search_phrase + '</mark>') }}
+                        {%  endautoescape %}
+                    {% else %}
+                        {{ value }}
+                    {% endif %}
+                </th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+
+
+</table>
+
+</body>
+</html>
