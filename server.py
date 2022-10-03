@@ -1,5 +1,7 @@
 from operator import itemgetter
 from flask import Flask, render_template, request, url_for, redirect
+from bonus_questions import SAMPLE_QUESTIONS
+
 from markupsafe import Markup
 
 import data_manager_answers
@@ -9,7 +11,7 @@ import util
 app = Flask(__name__)
 
 @app.route("/bonus-questions")
-def main():
+def bonus_question():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
