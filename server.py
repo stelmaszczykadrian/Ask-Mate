@@ -5,11 +5,12 @@ from markupsafe import Markup
 import data_manager_answers
 import data_manager_questions
 import util
+from bonus_questions import SAMPLE_QUESTIONS
 
 app = Flask(__name__)
 
 @app.route("/bonus-questions")
-def main():
+def bonus_questions():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
