@@ -125,7 +125,6 @@ def delete_comment(cursor, comment_id):
                 """
     cursor.execute(query, {'comment_id': comment_id})
 
-
 @database_common.connection_handler
 def vote_up_on_questions(cursor, question_id):
     query = """
@@ -232,3 +231,12 @@ def get_tags_with_numbers(cursor):
          """
     cursor.execute(query)
     return cursor.fetchall()
+
+#Still in work
+@database_common.connection_handler
+def change_reputation(cursor, increment, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation + %(increment)s
+             WHERE user_id = %(user_ids);"""
+    cursor.execute(query, {'increment': increment ,'user_id': user_id})
