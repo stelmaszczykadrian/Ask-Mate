@@ -3,6 +3,28 @@ from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 import util
 
+
+@database_common.connection_handler
+def addUser(cursor, new_user):
+    cursor.execute("""INSERT INTO users(user_name, password, registration_date)
+                   VALUES (%(user)s, %(psw)s, %(time)s)""",
+                   {
+                       'user': new_user['user_name'],
+                       'psw': new_user['password'],
+                       'time': new_user['registration_date'],
+                   })
+
+
+@database_common.connection_handler
+def get_user_password(cursor, user_name):
+    cursor.execute("""SELECT id, password FROM users
+                        WHERE user_name = %(username)s""",
+                   {
+                       'username': user_name,
+                   })
+    return cursor.fetchone()
+
+
 @database_common.connection_handler
 def get_question_data(cursor):
     query = """ SELECT * 
@@ -56,14 +78,15 @@ def get_comment_by_id(cursor, comment_id):
     return cursor.fetchone()
 
 @database_common.connection_handler
-def add_question(cursor, title, message,):
+def add_question(cursor, title, message, user_id):
     submission_time = util.get_time()
     query = """
                 INSERT INTO question
-                VALUES (DEFAULT,%(submission_time)s, 0, 0, %(title)s, %(message)s, NULL)
+                (submission_time, view_number, vote_number, title, message, user_id)
+                VALUES (%(submission_time)s, 0, 0, %(title)s, %(message)s, %(user_id)s)
                 RETURNING id;
             """
-    cursor.execute(query, {'submission_time': submission_time, 'title': title, 'message': message})
+    cursor.execute(query, {'submission_time': submission_time, 'title': title, 'message': message, 'user_id' : user_id})
     return cursor.fetchone()
 
 @database_common.connection_handler

@@ -23,15 +23,12 @@ CREATE TABLE users (
     user_name text,
     password text,
     registration_date timestamp without time zone,
-    asked_questions integer,
-    answers integer,
-    comments integer,
-    reputation integer
 );
 
 DROP TABLE IF EXISTS public.question;
 CREATE TABLE question (
     id serial NOT NULL,
+    user_id integer,
     submission_time timestamp without time zone,
     view_number integer,
     vote_number integer,
@@ -45,6 +42,7 @@ CREATE TABLE question (
 DROP TABLE IF EXISTS public.answer;
 CREATE TABLE answer (
     id serial NOT NULL,
+    user_id integer,
     submission_time timestamp without time zone,
     vote_number integer,
     question_id integer,
@@ -56,6 +54,7 @@ CREATE TABLE answer (
 DROP TABLE IF EXISTS public.comment;
 CREATE TABLE comment (
     id serial NOT NULL,
+    user_id integer,
     question_id integer,
     answer_id integer,
     message text,
