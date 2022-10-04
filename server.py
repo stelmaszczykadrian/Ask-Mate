@@ -1,7 +1,7 @@
 from operator import itemgetter
 from flask import Flask, render_template, request, url_for, redirect
 from markupsafe import Markup
-
+import users_manager
 import data_manager_answers
 import data_manager_questions
 import util
@@ -9,7 +9,7 @@ import util
 app = Flask(__name__)
 
 @app.route("/bonus-questions")
-def main():
+def bonus_question():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
@@ -203,6 +203,11 @@ def comment_to_answer(answer_id, question_id):
     else:
         return render_template("comment_to_answer.html", answer_id=answer_id, question_id=question_id)
 
+@app.route('/users')
+def display_users_list():
+    users_list = users_manager.get_users_list()
+    headers = util.USER_HEADER
+    return render_template("users.html", users_list=users_list, headers=headers)
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
