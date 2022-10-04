@@ -82,7 +82,7 @@ def add_question(cursor, title, message, user_id):
     submission_time = util.get_time()
     query = """
                 INSERT INTO question
-                (submission_time, title, message, user_id)
+                (submission_time, view_number, vote_number, title, message, user_id)
                 VALUES (%(submission_time)s, 0, 0, %(title)s, %(message)s, %(user_id)s)
                 RETURNING id;
             """

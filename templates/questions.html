@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block title %}
+questions
+{% endblock %}
+
+{% block body %}
+<h1>All Questions</h1>
+<div class="container">
+
+   
+   
+       {% for question in stories %}
+               <div class="all-table-question"><h4><a class="title-question" href="{{ url_for('question',question_id = question['id'], increment_view_number= True) }}">{{ question.title }}</a></h4>
+              <p>{{ question.message }}</p>
+              <br><br>
+              <p>VIEW NUMBER: {{ question.view_number }}</p>
+              <p>VOTE NUMBER: {{ question.vote_number }}</p>
+              <p class="submission-time" style="float:right">SUBMISSION TIME: {{ question.submission_time }}</p></div>
+       {% endfor %}
+
+
+{% endblock %}
