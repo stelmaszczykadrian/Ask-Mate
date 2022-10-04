@@ -148,7 +148,6 @@ def delete_comment(cursor, comment_id):
                 """
     cursor.execute(query, {'comment_id': comment_id})
 
-
 @database_common.connection_handler
 def vote_up_on_questions(cursor, question_id):
     query = """
@@ -243,3 +242,24 @@ def tag_delete_from_question(cursor, question_id, tag_id):
                     AND tag_id = %(tag_id)s
                     """,
                    {'question_id': question_id, 'tag_id': tag_id})
+
+@database_common.connection_handler
+def get_tags_with_numbers(cursor):
+    query = """
+        SELECT tag.name, COUNT(question_tag.tag_id) as number
+        FROM tag
+        LEFT OUTER JOIN question_tag
+        ON tag.id = question_tag.tag_id
+        GROUP BY tag.id;
+         """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+#Still in work
+@database_common.connection_handler
+def change_reputation(cursor, increment, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation + %(increment)s
+             WHERE user_id = %(user_ids);"""
+    cursor.execute(query, {'increment': increment ,'user_id': user_id})

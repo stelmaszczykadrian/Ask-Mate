@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ask Mate</title>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
+</head>
+<body>
+<h1>ASK MATE</h1>
+
+<h3>Tags list:</h3><br><br>
+<table border=solid>
+    <thead>
+    <th>Tag name</th>
+    <th>Times used</th>
+    </thead>
+    {% for tag in tags %}
+    <tr>
+        <td>{{ tag['name'] }}</td>
+        <td> {{ tag['number'] }}</td>
+    </tr>
+    {% endfor %}
+</table><br><br>
+<button><a  class="button-all-question" href="/">Back</a></button>
+</body>
+</html>

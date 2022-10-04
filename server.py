@@ -1,5 +1,7 @@
 from operator import itemgetter
 from flask import Flask, render_template, request, url_for, redirect, flash, session
+from bonus_questions import SAMPLE_QUESTIONS
+
 from markupsafe import Markup
 from datetime import datetime
 import time
@@ -9,6 +11,7 @@ import users_manager
 import data_manager_answers
 import data_manager_questions
 import util
+from bonus_questions import SAMPLE_QUESTIONS
 
 app = Flask(__name__)
 app.secret_key = 'ghbdtn93vbh65bdctv407yfv'
@@ -206,7 +209,6 @@ def delete_comment(question_id, comment_id):
     data_manager_questions.delete_comment(comment_id)
     return redirect(url_for('question', question_id=question_id))
 
-
 @app.route('/question/<int:question_id>/vote-up')
 def question_vote_up(question_id):
     data_manager_questions.vote_up_on_questions(question_id)
@@ -219,7 +221,6 @@ def question_vote_down(question_id):
     data_manager_questions.vote_down_on_questions(question_id)
     blink_url = "/question/" + str(question_id)
     return redirect(blink_url)
-
 
 @app.route('/answer/<int:answer_id>/vote-up')
 def answer_vote_up(answer_id):
@@ -268,6 +269,11 @@ def delete_tag_from_question(question_id, tag_id):
     data_manager_questions.tag_delete_from_question(question_id, tag_id)
     return redirect(url_for('question', question_id=question_id))
 
+
+@app.route('/tags')
+def tag_page():
+    tags = data_manager_questions.get_tags_with_numbers()
+    return render_template('tags.html', tags=tags)
 
 @app.route("/question/<int:question_id>/answer/<int:answer_id>/new-comment", methods=['GET', 'POST'])
 def comment_to_answer(answer_id, question_id):
