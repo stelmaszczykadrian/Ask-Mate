@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Users list</title>
 </head>
 <body>
-$END$
+    <table>
+        <thead>
+        <tr>
+            {% for header in headers %}
+            <th>{{ header }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+        <tbody>
+            <tr>
+            {% for user in users_list %}
+                <tr>
+                {% for key,value in user.items() %}
+                    <th>{{ value }}</th>
+                {% endfor %}
+            {% endfor %}
+            </tr>
+        </tbody>
+
+    </table>
 </body>
 </html>
