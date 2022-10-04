@@ -25,8 +25,8 @@
        </div>
        {% else %}
        <div class="nav_bar-btn-alternative">
-       <h3>Wellcome : {{ logged_user.user_name }}</h3>
-       <button class="btn-nav_bar_alternative"><a class="btn-nav_bar" type="button" href="/main" role="button">Logout</a></button>
+       <h3>Welcome : {{ logged_user.user_name }}</h3>
+       <button class="btn-nav_bar_alternative"><a class="btn-nav_bar" type="button" href="{{ url_for('logout') }}" role="button" methods="post">Logout</a></button>
       </div>
       {% endif %}
    </div>
