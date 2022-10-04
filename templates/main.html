@@ -7,7 +7,7 @@
 </head>
 <body>
    <div class="nav_bar">
-      <a class="navbar-brand" href="/">TEAM_01_MAY</a>
+      <a href="/"><img class="mb-2" src="/static/image/logo_min-02.png" alt="" width="80" height="65"></a>
       <div class="nav_bar-main">
          <ul class="main-iner">
             <a class="main-iner-link" href="#">Home</a>
@@ -34,13 +34,38 @@
    
 
 {% block body %}
+<div class="wrapper">
 <div class="container">
    <h1>WELCOME to the ASK MATE </h1>
-
-   
+   <img class="image_main" src="/static/image/recursosprogramadores.png" alt="">
 
 </div>
-
+<footer class="footer-content">
+   <div class="col_01">
+      <img class="mb-2" src="/static/image/logo_min-02.png" alt="" width="80" height="65">
+      <small class="d-block mb-3 text-muted">© 2022-2023</small>
+    </div>
+    <div class="col_02">
+      <h4>About</h4>
+      <ul class="list-unstyled">
+        <li><a class="text-muted" href="#">Team</a></li>
+        <li><a class="text-muted" href="#">Users</a></li>
+      </ul>
+    </div>
+    <div class="col_03">
+      <h4>Resources</h4>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Resource</a></li>
+        <li><a class="text-muted" href="#">Resource name</a></li>
+      </ul>
+    </div>
+    <div class="col_04">
+      <h4>Contact as</h4>
+      <h4>contac@teamone.com</h4>
+    </div>
+</footer>
+</div>
 {% endblock %}
+
 </body>
 </html>

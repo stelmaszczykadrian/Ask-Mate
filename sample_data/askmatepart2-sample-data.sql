@@ -20,43 +20,48 @@ ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS pk_user_id CAS
 DROP TABLE IF EXISTS public.users;
 CREATE TABLE users (
     id serial NOT NULL,
-    username text,
+    user_name text,
     password text,
-    registration_date timestamp without time zone
+    registration_date timestamp without time zone,
+    asked_questions integer,
+    answers integer,
+    comments integer,
+    reputation integer
 );
 
 DROP TABLE IF EXISTS public.question;
 CREATE TABLE question (
     id serial NOT NULL,
-    user_id integer,
     submission_time timestamp without time zone,
     view_number integer,
     vote_number integer,
     title text,
     message text,
-    image text
+    image text,
+    user_id integer
+
 );
 
 DROP TABLE IF EXISTS public.answer;
 CREATE TABLE answer (
     id serial NOT NULL,
-    user_id integer,
     submission_time timestamp without time zone,
     vote_number integer,
     question_id integer,
     message text,
-    image text
+    image text,
+    user_id integer
 );
 
 DROP TABLE IF EXISTS public.comment;
 CREATE TABLE comment (
     id serial NOT NULL,
-    user_id integer,
     question_id integer,
     answer_id integer,
     message text,
     submission_time timestamp without time zone,
-    edited_count integer NOT NULL
+    edited_count integer NOT NULL,
+    user_id integer
 );
 
 
