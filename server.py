@@ -1,6 +1,11 @@
 from operator import itemgetter
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, flash, session
 from bonus_questions import SAMPLE_QUESTIONS
+from markupsafe import Markup
+from datetime import datetime
+import time
+from werkzeug.security import generate_password_hash, check_password_hash
+import user_controler
 
 from markupsafe import Markup
 
@@ -9,17 +14,76 @@ import data_manager_questions
 import util
 
 app = Flask(__name__)
+app.secret_key = 'ghbdtn93vbh65bdctv407yfv'
+
+def get_logged_user():
+    if 'user_name' in session:
+        return {'user_name': session['user_name'], 'id': session['id']}
+    else:
+        return None
+
+@app.route("/login", methods=["POST", 'GET'])
+def login():
+    user = {}
+    invalid_credentials = False
+    if request.method == "POST":
+        user_name = request.form['email']
+        password = request.form['psw']
+        user_data = data_manager_questions.get_user_password(user_name)
+        if user_data and check_password_hash(user_data['password'], password):
+            session['id'] = user_data['id']
+            session['user_name'] = user_name
+            return redirect(url_for('main'))
+        else:
+            invalid_credentials = True
+            print("bad login")
+
+    return render_template('login.html',  title="authorization", invalid_credentials=invalid_credentials)
 
 @app.route("/bonus-questions")
 def bonus_question():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
+@app.route("/registration", methods=["POST", 'GET'])
+def registration():
+    ts_epoch = (int(time.time()))
+    new_user = {}
+    if request.method == "POST":
+        if len(request.form['email']) > 4 \
+                and len(request.form['psw']) > 3:
+            hash = generate_password_hash(request.form['psw'])
+            new_user['user_name'] = request.form['email']
+            new_user['password'] = hash
+            new_user['registration_date'] = datetime.fromtimestamp(
+                ts_epoch).strftime('%Y-%m-%d %H:%M:%S')
+            data_manager_questions.addUser(new_user)
+            if new_user:
+                flash("You have successfully registered!", category="success")
+                return redirect(url_for('login'))
+            else:
+                flash("Error adding to database", category="error")
+        else:
+            flash("The form contains errors", category="error")
+
+    return render_template('registration.html', title="register")
+
+
 @app.route("/", methods=['GET'])
 def main():
-    user_questions = data_manager_questions.get_latest_questions()
+    # user_questions = data_manager_questions.get_latest_questions()
     # all_questions_data = data_manager_questions.get_question_data()
-    return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    # return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    if 'id' in session:
+        return render_template('main.html', logged_user=get_logged_user())
+    return render_template('main.html')
+
+
+@app.route("/logout")
+def logout():
+    session.pop('id', None)
+    session.pop('user_name', None)
+    return redirect(url_for("login"))
 
 
 @app.route('/list', methods=['GET'])
@@ -208,11 +272,11 @@ def comment_to_answer(answer_id, question_id):
 @app.route('/user/<user_id>') #linked from the front page and page of every user is linked on the users list page.
 def user_details(user_id):
     user_email = session["email"]
-    current_user_data = data_manager.get_current_user_data(user_id)[0]
-    current_user_questions = data_manager.get_current_user_questions(user_id)
-    current_user_answers = data_manager.get_current_user_answers(user_id)
-    current_user_comments = data_manager.get_current_user_comments(user_id)
-    return render_template('profile.html', user_id=user_id, current_user_data=current_user_data,
+    current_user_data = user_controler.get_current_user_data(user_id)[0]
+    current_user_questions = user_controler.get_current_user_questions(user_id)
+    current_user_answers = user_controler.get_current_user_answers(user_id)
+    current_user_comments = user_controler.get_current_user_comments(user_id)
+    return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
                            current_user_questions=current_user_questions, current_user_answers=current_user_answers,
                            logged_in=True, user_email=user_email, current_user_comments=current_user_comments)
 
