@@ -197,6 +197,11 @@ def delete_tag_from_question(question_id, tag_id):
     return redirect(url_for('question', question_id=question_id))
 
 
+@app.route('/tags')
+def tag_page():
+    tags = data_manager_questions.get_tags_with_numbers()
+    return render_template('tags.html', tags=tags)
+
 @app.route("/question/<int:question_id>/answer/<int:answer_id>/new-comment", methods=['GET', 'POST'])
 def comment_to_answer(answer_id, question_id):
     if request.method == "POST":
