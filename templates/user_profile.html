@@ -1,0 +1,77 @@
+{%extends "/main.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User profile</title>
+</head>
+<body>
+{% block content %}
+    <ul>
+        <li>User ID: {{ user_id }}</li>
+        <li>User: {{ current_user_data['username'] }}</li>
+        <li>Registration Date: {{ current_user_data['registration_date'] }}</li>
+        <li>Number of asked questions: {{ current_user_data['number_of_asked_questions'] }}</li>
+        <li>Number of answers: {{ current_user_data['number_of_answers'] }}</li>
+        <li>Number of comments: {{ current_user_data['number_of_comments'] }}</li>
+        <li>Reputation: Coming Soon</li>
+    </ul>
+    <h1>User Questions:</h1>
+    <table>
+        <thead>
+            <th>Submission time</th>
+            <th>View number</th>
+            <th>Vote number</th>
+            <th>Title</th>
+            <th>Message</th>
+            <th>Image</th>
+        </thead>
+        {% for question in current_user_questions %}
+            <tr>
+            {% for data in question %}
+                {% if data == 'title' %}
+                    <td><a href="/question/{{ question['id'] }}">{{ question[data] }}</a></td>
+                {% elif data != 'id' %}
+                    <td>{{ question[data] }}</td>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<h1>User Answers:</h1>
+<table>
+        <thead>
+            <th>Submission time</th>
+            <th>Vote number</th>
+            <th>Message</th>
+            <th>Image</th>
+        </thead>
+        {% for answers in current_user_answers %}
+            <tr>
+            {% for data in answers %}
+                    <td>{{ answers[data] }}</td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<h1>User Comments:</h1>
+<table>
+        <thead>
+            <th>Submission time</th>
+            <th>Message</th>
+            <th>Edited_count</th>
+        </thead>
+        {% for comments in current_user_comments %}
+            <tr>
+            {% for data in comments %}
+                    <td>{{ comments[data] }}</td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{%endblock%}
+</body>
+</html>
