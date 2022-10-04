@@ -2,7 +2,7 @@ import database_common
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
-@connect_database.connection_handler
+@database_common.connection_handler
 def get_current_user_id(cursor,email):
     cursor.execute(f"""
                     SELECT id
@@ -23,7 +23,7 @@ def get_current_user_data(cursor, user_id):
                     """)
     return cursor.fetchall()
 
-@connect_database.connection_handler
+@database_common.connection_handler
 def get_current_user_questions(cursor,user_id):
     cursor.execute(f"""
                     SELECT *
@@ -34,7 +34,7 @@ def get_current_user_questions(cursor,user_id):
                     """);
     return cursor.fetchall()
 
-@connect_database.connection_handler
+@database_common.connection_handler
 def get_current_user_answers(cursor, user_id):
     cursor.execute(f"""
                     SELECT answer.submission_time, answer.vote_number, answer.message, answer.image
@@ -45,7 +45,7 @@ def get_current_user_answers(cursor, user_id):
                     """);
     return cursor.fetchall()
 
-@connect_database.connection_handler
+@database_common.connection_handler
 def get_current_user_comments(cursor, user_id):
     cursor.execute(f"""
                     SELECT comment.submission_time, comment.message, comment.edited_count
