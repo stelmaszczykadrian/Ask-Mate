@@ -20,7 +20,7 @@ ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS pk_user_id CAS
 DROP TABLE IF EXISTS public.users;
 CREATE TABLE users (
     id serial NOT NULL,
-    login text,
+    username text,
     password text,
     registration_date timestamp without time zone
 );
