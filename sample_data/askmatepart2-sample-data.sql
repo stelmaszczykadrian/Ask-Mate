@@ -23,9 +23,9 @@ CREATE TABLE users (
     user_name text,
     password text,
     registration_date timestamp without time zone,
-    asked_questions integer,
-    answers integer,
-    comments integer,
+    number_of_asked_questions integer,
+    number_of_answers integer,
+    number_of_comments integer,
     reputation integer
 );
 

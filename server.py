@@ -292,8 +292,6 @@ def display_users_list():
     return render_template("users.html", users_list=users_list, headers=headers)
 
 
-
-
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
     app.run(
