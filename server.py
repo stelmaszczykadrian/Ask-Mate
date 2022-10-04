@@ -112,6 +112,10 @@ def question(question_id):
     user_question = data_manager_questions.get_question_by_id(question_id)
     user_answers = data_manager_answers.get_answers_by_id(question_id)
     user_comments_to_questions = data_manager_questions.get_question_comments(question_id)
+    for answer in user_answers:
+        comments_to_answer = data_manager_answers.get_answers_comments(answer['id'])
+        answer['comments'] = comments_to_answer
+
     return render_template('question.html', question=user_question, answers=user_answers,
                            user_comments_to_questions=user_comments_to_questions, question_id=question_id,
                            tags=data_manager_questions.get_tags(question_id))
