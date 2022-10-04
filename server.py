@@ -71,11 +71,11 @@ def registration():
 
 @app.route("/", methods=['GET'])
 def main():
-    # user_questions = data_manager_questions.get_latest_questions()
-    # all_questions_data = data_manager_questions.get_question_data()
-    # return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    user_questions = data_manager_questions.get_latest_questions()
+    all_questions_data = data_manager_questions.get_question_data()
+    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
     if 'id' in session:
-        return render_template('main.html', logged_user=get_logged_user())
+        return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
     return render_template('main.html')
 
 
@@ -84,7 +84,7 @@ def logout():
     session.pop('id', None)
     session.pop('user_name', None)
     return redirect(url_for("login"))
-
+ 
 
 @app.route('/list', methods=['GET'])
 def route_list():
@@ -95,8 +95,7 @@ def route_list():
         question['view_number'] = int(question['view_number'])
         question['vote_number'] = int(question['vote_number'])
 
-    sorted_questions_by_recent = sorted(user_questions, key=itemgetter(
-        order_by), reverse=order_direction == 'desc')
+    sorted_questions_by_recent = sorted(user_questions, key=itemgetter(order_by), reverse=order_direction == 'desc')
     print(sorted_questions_by_recent)
     return render_template('list.html', headers=util.QUESTION_HEADER,
                            stories=sorted_questions_by_recent,
@@ -116,12 +115,23 @@ def question(question_id):
                            tags=data_manager_questions.get_tags(question_id))
 
 
+@app.route('/questions', methods=['GET'])
+def all_questions():
+    user_questions = data_manager_questions.get_latest_questions()
+    all_questions_data = data_manager_questions.get_question_data()
+    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    if 'id' in session:
+        return render_template('questions.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
+    return render_template('questions.html')
+    
+
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
         title = request.form.get('title')
         message = request.form.get('message')
-        id = data_manager_questions.add_question(title, message)
+        user_id = session['id']
+        id = data_manager_questions.add_question(title, message, user_id)
         return redirect(url_for('question', question_id=id['id']))
     return render_template('add-question.html')
 
@@ -279,6 +289,9 @@ def user_details(user_id):
     return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
                            current_user_questions=current_user_questions, current_user_answers=current_user_answers,
                            logged_in=True, user_email=user_email, current_user_comments=current_user_comments)
+
+
+
 
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
