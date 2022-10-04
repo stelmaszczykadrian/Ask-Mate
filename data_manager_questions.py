@@ -90,15 +90,24 @@ def add_question(cursor, title, message, user_id):
     cursor.execute(query, {'submission_time': submission_time, 'title': title, 'message': message, 'user_id' : user_id})
     return cursor.fetchone()
 
-@database_common.connection_handler
-def add_new_comment(cursor, question_id, message):
-    submission_time = util.get_time()
-    query = """
-        INSERT INTO comment(question_id, message, submission_time, edited_count)
-        VALUES (%(question_id)s, %(message)s, %(submission_time)s, 0)
-        """
-    cursor.execute(query, {"question_id": question_id, "message": message, "submission_time": submission_time})
+# @database_common.connection_handler
+# def add_new_comment(cursor, question_id, message):
+#     submission_time = util.get_time()
+#     query = """
+#         INSERT INTO comment(question_id, message, submission_time, edited_count)
+#         VALUES (%(question_id)s, %(message)s, %(submission_time)s, 0)
+#         """
+#     cursor.execute(query, {"question_id": question_id, "message": message, "submission_time": submission_time})
 
+
+@database_common.connection_handler
+def write_comment(cursor, question_id, message, user_id):
+    submission_time = util.get_time()
+    edited_count = 0
+    query = """
+    INSERT INTO comment (question_id, message, submission_time, edited_count, user_id) 
+    VALUES (%s, %s, %s, %s, %s);"""
+    cursor.execute(query, (question_id, message, submission_time, edited_count, user_id))
 @database_common.connection_handler
 def edit_question(cursor, title, message, question_id):
     query = f"""
@@ -258,9 +267,9 @@ def get_tags_with_numbers(cursor):
 
 #Still in work
 @database_common.connection_handler
-def change_reputation(cursor, increment, user_id):
+def change_reputation(cursor, value, user_id):
     query = """
              UPDATE users
-             SET reputation = reputation + %(increment)s
-             WHERE user_id = %(user_ids);"""
-    cursor.execute(query, {'increment': increment ,'user_id': user_id})
+             SET reputation = reputation + %(value)s
+             WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'value': value ,'user_id': user_id})

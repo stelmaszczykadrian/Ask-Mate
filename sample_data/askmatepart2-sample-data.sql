@@ -23,10 +23,10 @@ CREATE TABLE users (
     user_name text,
     password text,
     registration_date timestamp without time zone,
-    number_of_asked_questions integer,
-    number_of_answers integer,
-    number_of_comments integer,
-    reputation integer
+    number_of_asked_questions integer default 0,
+    number_of_answers integer default 0,
+    number_of_comments integer default 0,
+    reputation integer default 0
 );
 
 DROP TABLE IF EXISTS public.question;
