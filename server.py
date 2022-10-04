@@ -9,14 +9,14 @@ import util
 app = Flask(__name__)
 
 @app.route("/bonus-questions")
-def main():
+def bonus_question():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
 @app.route("/", methods=['GET'])
 def main():
     user_questions = data_manager_questions.get_latest_questions()
-    # all_questions_data = data_manager_questions.get_question_data()
+    all_questions_data = data_manager_questions.get_question_data()
     return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
 
 
