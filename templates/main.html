@@ -2,38 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
 </head>
 <body>
-<h1>ASK MATE</h1>
-{#<table border=solid>#}
-{#    <thead>#}
-{#        <tr>#}
-{#            {% for header in headers %}#}
-{#            <th>{{ header }}</th>#}
-{#            {% endfor %}#}
-{#        </tr>#}
-{#    </thead>#}
-<button><a  class="button-all-question" href="/list">All questions</a></button>
-<form style="float:right" action="/search" method="get">
-  <input type="text" name="search_phrase" id="search_phrase">
-  <input type="submit" value="Search">
-</form>
+   <div class="nav_bar">
+      <a class="navbar-brand" href="/">TEAM_01_MAY</a>
+      <div class="nav_bar-main">
+         <ul class="main-iner">
+            <a class="main-iner-link" href="#">Home</a>
+            <a class="main-iner-link" href="#">About us </a>
 
-    {% for question in stories %}
-            <div class="all-table-question"><h4><a class="title-question" href="{{ url_for('question',question_id = question['id'], increment_view_number= True) }}">{{ question.title }}</a></h4>
-           <p>{{ question.message }}</p>
-           <br><br>
-           <p>VIEW NUMBER: {{ question.view_number }}</p>
-           <p>VOTE NUMBER: {{ question.vote_number }}</p>
-           <p class="submission-time" style="float:right">SUBMISSION TIME: {{ question.submission_time }}</p></div>
-    {% endfor %}
+         </ul>
+       </div>
+       {% if not logged_user %}
+       <div class="nav_bar-btn">
+         <button class="btn-btn" ><a class="btn-nav_bar" type="button" href="/login" role="button">Login</a></button>
+         <button><a class="btn-nav_bar" type="button" href="/registration" role="button">Sing up</a></button>
+       </div>
+       {% else %}
+       <div class="nav_bar-btn-alternative">
+       <h3>Wellcome : {{ logged_user.user_name }}</h3>
+       <button class="btn-nav_bar_alternative"><a class="btn-nav_bar" type="button" href="/logout" role="button">Logout</a></button>
+      </div>
+      {% endif %}
+   </div>
 
-<br>
-</body>
+   
 
-</html>
+{% block body %}
+<div class="container">
+   <h1>WELCOME to the ASK MATE </h1>
+   {#<table border=solid>#}
+   {#    <thead>#}
+   {#        <tr>#}
+   {#            {% for header in headers %}#}
+   {#            <th>{{ header }}</th>#}
+   {#            {% endfor %}#}
+   {#        </tr>#}
+   {#    </thead>#}
+   <button><a  class="button-all-question" href="/list">All questions</a></button>
+   <form style="float:right" action="/search" method="get">
+     <input type="text" name="search_phrase" id="search_phrase">
+     <input type="submit" value="Search">
+   </form>
+   
+       {% for question in stories %}
+               <div class="all-table-question"><h4><a class="title-question" href="{{ url_for('question',question_id = question['id'], increment_view_number= True) }}">{{ question.title }}</a></h4>
+              <p>{{ question.message }}</p>
+              <br><br>
+              <p>VIEW NUMBER: {{ question.view_number }}</p>
+              <p>VOTE NUMBER: {{ question.vote_number }}</p>
+              <p class="submission-time" style="float:right">SUBMISSION TIME: {{ question.submission_time }}</p></div>
+       {% endfor %}
 
+</div>
+
+{% endblock %}
 </body>
 </html>
