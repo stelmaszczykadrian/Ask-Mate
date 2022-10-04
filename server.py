@@ -7,7 +7,7 @@ from datetime import datetime
 import time
 from werkzeug.security import generate_password_hash, check_password_hash
 
-import users_manager
+import user_controller
 import data_manager_answers
 import data_manager_questions
 import util
@@ -286,7 +286,7 @@ def comment_to_answer(answer_id, question_id):
 
 @app.route('/users')
 def display_users_list():
-    users_list = users_manager.get_users_list()
+    users_list = user_controller.get_users_list()
     print(users_list)
     headers = util.USER_HEADER
     return render_template("users.html", users_list=users_list, headers=headers)
