@@ -20,14 +20,15 @@ ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS pk_user_id CAS
 DROP TABLE IF EXISTS public.users;
 CREATE TABLE users (
     id serial NOT NULL,
-    login text,
+    user_name text,
     password text,
-    registration_date timestamp without time zone
+    registration_date timestamp without time zone,
 );
 
 DROP TABLE IF EXISTS public.question;
 CREATE TABLE question (
     id serial NOT NULL,
+    user_id integer,
     submission_time timestamp without time zone,
     view_number integer,
     vote_number integer,
@@ -39,6 +40,7 @@ CREATE TABLE question (
 DROP TABLE IF EXISTS public.answer;
 CREATE TABLE answer (
     id serial NOT NULL,
+    user_id integer,
     submission_time timestamp without time zone,
     vote_number integer,
     question_id integer,
@@ -49,6 +51,7 @@ CREATE TABLE answer (
 DROP TABLE IF EXISTS public.comment;
 CREATE TABLE comment (
     id serial NOT NULL,
+    user_id integer,
     question_id integer,
     answer_id integer,
     message text,
@@ -104,11 +107,8 @@ ALTER TABLE ONLY question_tag
 
 INSERT INTO question VALUES (0, '2017-04-28 08:29:00', 29, 7, 'How to make lists in Python?', 'I am totally new to this, any hints?', NULL);
 INSERT INTO question VALUES (1, '2017-04-29 09:19:00', 15, 9, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $(".myBook").booklet();
-
 I could easy managing the loading order with wp_enqueue_script so first I load jquery then I load booklet so everything is fine.
-
 BUT in my theme i also using jquery via webpack so the loading order is now following:
-
 jquery
 booklet
 app.js (bundled file with webpack, including jquery)', 'images/image1.png');
