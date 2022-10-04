@@ -1,5 +1,7 @@
 from operator import itemgetter
 from flask import Flask, render_template, request, url_for, redirect
+from bonus_questions import SAMPLE_QUESTIONS
+
 from markupsafe import Markup
 import users_manager
 import data_manager_answers
