@@ -20,9 +20,13 @@ ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS pk_user_id CAS
 DROP TABLE IF EXISTS public.users;
 CREATE TABLE users (
     id serial NOT NULL,
-    login text,
+    user_name text,
     password text,
-    registration_date timestamp without time zone
+    registration_date timestamp without time zone,
+    asked_questions integer,
+    answers integer,
+    comments integer,
+    reputation integer
 );
 
 DROP TABLE IF EXISTS public.question;
@@ -33,7 +37,9 @@ CREATE TABLE question (
     vote_number integer,
     title text,
     message text,
-    image text
+    image text,
+    user_id integer
+
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -43,7 +49,8 @@ CREATE TABLE answer (
     vote_number integer,
     question_id integer,
     message text,
-    image text
+    image text,
+    user_id integer
 );
 
 DROP TABLE IF EXISTS public.comment;
@@ -53,7 +60,8 @@ CREATE TABLE comment (
     answer_id integer,
     message text,
     submission_time timestamp without time zone,
-    edited_count integer NOT NULL
+    edited_count integer NOT NULL,
+    user_id integer
 );
 
 
@@ -104,11 +112,8 @@ ALTER TABLE ONLY question_tag
 
 INSERT INTO question VALUES (0, '2017-04-28 08:29:00', 29, 7, 'How to make lists in Python?', 'I am totally new to this, any hints?', NULL);
 INSERT INTO question VALUES (1, '2017-04-29 09:19:00', 15, 9, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $(".myBook").booklet();
-
 I could easy managing the loading order with wp_enqueue_script so first I load jquery then I load booklet so everything is fine.
-
 BUT in my theme i also using jquery via webpack so the loading order is now following:
-
 jquery
 booklet
 app.js (bundled file with webpack, including jquery)', 'images/image1.png');

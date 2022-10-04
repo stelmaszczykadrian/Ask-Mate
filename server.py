@@ -134,7 +134,6 @@ def delete_comment(question_id, comment_id):
     data_manager_questions.delete_comment(comment_id)
     return redirect(url_for('question', question_id=question_id))
 
-
 @app.route('/question/<int:question_id>/vote-up')
 def question_vote_up(question_id):
     data_manager_questions.vote_up_on_questions(question_id)
@@ -147,7 +146,6 @@ def question_vote_down(question_id):
     data_manager_questions.vote_down_on_questions(question_id)
     blink_url = "/question/" + str(question_id)
     return redirect(blink_url)
-
 
 @app.route('/answer/<int:answer_id>/vote-up')
 def answer_vote_up(answer_id):
