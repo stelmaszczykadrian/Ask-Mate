@@ -6,7 +6,9 @@ from markupsafe import Markup
 from datetime import datetime
 import time
 from werkzeug.security import generate_password_hash, check_password_hash
+import user_controler
 
+from markupsafe import Markup
 
 import data_manager_answers
 import data_manager_questions
@@ -22,7 +24,6 @@ def get_logged_user():
         return {'user_name': session['user_name'], 'id': session['id']}
     else:
         return None
-
 
 @app.route("/login", methods=["POST", 'GET'])
 def login():
@@ -49,7 +50,7 @@ def registration():
     new_user = {}
     if request.method == "POST":
         if len(request.form['email']) > 4 \
-           and len(request.form['psw']) > 3:
+                and len(request.form['psw']) > 3:
             hash = generate_password_hash(request.form['psw'])
             new_user['user_name'] = request.form['email']
             new_user['password'] = hash
@@ -284,7 +285,17 @@ def comment_to_answer(answer_id, question_id):
     else:
         return render_template("comment_to_answer.html", answer_id=answer_id, question_id=question_id)
 
+@app.route('/user/<user_id>') #linked from the front page and page of every user is linked on the users list page.
+def user_details(user_id):
+    if 'id' in session:
+        current_user_data = user_controler.get_current_user_data(user_id)[0]
+        current_user_questions = user_controler.get_current_user_questions(user_id)
+        current_user_answers = user_controler.get_current_user_answers(user_id)
+        current_user_comments = user_controler.get_current_user_comments(user_id)
 
+        return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
+                                   current_user_questions=current_user_questions, current_user_answers=current_user_answers,
+                                   logged_in=True, current_user_comments=current_user_comments)
 
 
 

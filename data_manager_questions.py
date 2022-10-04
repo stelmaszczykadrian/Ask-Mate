@@ -6,7 +6,8 @@ import util
 
 @database_common.connection_handler
 def addUser(cursor, new_user):
-    cursor.execute("""INSERT INTO users(user_name, password, registration_date)
+    cursor.execute("""INSERT INTO users
+                    (user_name, password, registration_date)
                    VALUES (%(user)s, %(psw)s, %(time)s)""",
                    {
                        'user': new_user['user_name'],
