@@ -85,7 +85,6 @@ def main():
 def logout():
     session.pop('id', None)
     session.pop('user_name', None)
-    # session.clear()
     return redirect(url_for("main"))
  
 
