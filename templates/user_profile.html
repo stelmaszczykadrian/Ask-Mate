@@ -1,26 +1,79 @@
-{% extends 'main.html' %}
-
-{% block title %}
-User profile
-{% endblock %}
-
-{% block body %}
-<h1>Sign In!</h1>
-<form class="form-container" action="/login" method="post">
-   <div class="form-group">
-      <label for="exampleInputEmail1">Email address</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Enter email">
-   </div>
-   <div class="form-group">
-   <label for="exampleInputPassword1">Password</label>
-   <input type="password" class="form-control" id="exampleInputPassword1" name="psw" placeholder="Password">
-   </div>
-   <div class="form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1">Remember me</label>
-    </div>
-   <button type="submit" class="btn-form">Submit</button>
-   
-</form>
-
-{% endblock %}
+{%extends "/main.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%block User profil%}
+    <meta charset="UTF-8">
+    <title>profile</title>
+    {%endblock%}
+</head>
+<body>
+{% block content %}
+    <ul>
+        <li>User ID: {{ user_id }}</li>
+        <li>User: {{ current_user_data['username'] }}</li>
+        <li>Registration Date: {{ current_user_data['registration_date'] }}</li>
+        <li>Number of asked questions: {{ current_user_data['number_of_asked_questions'] }}</li>
+        <li>Number of answers: {{ current_user_data['number_of_answers'] }}</li>
+        <li>Number of comments: {{ current_user_data['number_of_comments'] }}</li>
+        <li>Reputation: Coming Soon</li>
+    </ul>
+    <h1>User Questions:</h1>
+    <table>
+        <thead>
+            <th>Submission time</th>
+            <th>View number</th>
+            <th>Vote number</th>
+            <th>Title</th>
+            <th>Message</th>
+            <th>Image</th>
+        </thead>
+        {% for question in current_user_questions %}
+            <tr>
+            {% for data in question %}
+                {% if data == 'title' %}
+                    <td><a href="/question/{{ question['id'] }}">{{ question[data] }}</a></td>
+                {% elif data != 'id' %}
+                    <td>{{ question[data] }}</td>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<h1>User Answers:</h1>
+<table>
+        <thead>
+            <th>Submission time</th>
+            <th>Vote number</th>
+            <th>Message</th>
+            <th>Image</th>
+        </thead>
+        {% for answers in current_user_answers %}
+            <tr>
+            {% for data in answers %}
+                    <td>{{ answers[data] }}</td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<h1>User Comments:</h1>
+<table>
+        <thead>
+            <th>Submission time</th>
+            <th>Message</th>
+            <th>Edited_count</th>
+        </thead>
+        {% for comments in current_user_comments %}
+            <tr>
+            {% for data in comments %}
+                    <td>{{ comments[data] }}</td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{%endblock%}
+</body>
+</html>

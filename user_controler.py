@@ -14,7 +14,10 @@ def get_current_user_id(cursor,email):
 @database_common.connection_handler
 def get_current_user_data(cursor, user_id):
     cursor.execute(f"""
-                    SELECT *
+                    SELECT *, 
+                    (SELECT count(*) FROM question WHERE user_id = users.id) AS number_of_asked_questions,
+                    (SELECT count(*) FROM answer WHERE user_id = users.id) AS number_of_answers,
+                    (SELECT count(*) FROM comment WHERE user_id = users.id) AS number_of_comments
                     FROM users
                     WHERE id = '{user_id}'
                     """)
