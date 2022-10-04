@@ -287,6 +287,7 @@ def comment_to_answer(answer_id, question_id):
 @app.route('/users')
 def display_users_list():
     users_list = users_manager.get_users_list()
+    print(users_list)
     headers = util.USER_HEADER
     return render_template("users.html", users_list=users_list, headers=headers)
 
