@@ -1,15 +1,68 @@
 from operator import itemgetter
-from flask import Flask, render_template, request, url_for, redirect
-from bonus_questions import SAMPLE_QUESTIONS
-
+from flask import Flask, render_template, request, url_for, redirect, flash, session
 from markupsafe import Markup
+from datetime import datetime
+import time
+from werkzeug.security import generate_password_hash, check_password_hash
+
 import users_manager
 import data_manager_answers
 import data_manager_questions
 import util
 
 app = Flask(__name__)
+app.secret_key = 'ghbdtn93vbh65bdctv407yfv'
 
+
+def get_logged_user():
+    if 'user_name' in session:
+        return {'user_name': session['user_name'], 'id': session['id']}
+    else:
+        return None
+
+
+@app.route("/login", methods=["POST", 'GET'])
+def login():
+    user = {}
+    invalid_credentials = False
+    if request.method == "POST":
+        user_name = request.form['email']
+        password = request.form['psw']
+        user_data = data_manager_questions.get_user_password(user_name)
+        if user_data and check_password_hash(user_data['password'], password):
+            session['id'] = user_data['id']
+            session['user_name'] = user_name
+            return redirect(url_for('main'))
+        else:
+            invalid_credentials = True
+            print("bad login")
+
+    return render_template('login.html',  title="authorization", invalid_credentials=invalid_credentials)
+ 
+ 
+@app.route("/registration", methods=["POST", 'GET'])
+def registration():
+    ts_epoch = (int(time.time()))
+    new_user = {}
+    if request.method == "POST":
+        if len(request.form['email']) > 4 \
+           and len(request.form['psw']) > 3:
+            hash = generate_password_hash(request.form['psw'])
+            new_user['user_name'] = request.form['email']
+            new_user['password'] = hash
+            new_user['registration_date'] = datetime.fromtimestamp(
+                ts_epoch).strftime('%Y-%m-%d %H:%M:%S')
+            data_manager_questions.addUser(new_user)
+            if new_user:
+                flash("You have successfully registered!", category="success")
+                return redirect(url_for('login'))
+            else:
+                flash("Error adding to database", category="error")
+        else:
+            flash("The form contains errors", category="error")
+
+    return render_template('registration.html',  title="register")
+    
 @app.route("/bonus-questions")
 def bonus_question():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
@@ -18,9 +71,19 @@ def bonus_question():
 @app.route("/", methods=['GET'])
 def main():
     user_questions = data_manager_questions.get_latest_questions()
-    # all_questions_data = data_manager_questions.get_question_data()
-    return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    all_questions_data = data_manager_questions.get_question_data()
+    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    if 'id' in session:
+        return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
+    return render_template('main.html')
 
+
+@app.route("/logout")
+def logout():
+    session.pop('id', None)
+    session.pop('user_name', None)
+    return redirect(url_for("login"))
+ 
 
 @app.route('/list', methods=['GET'])
 def route_list():
@@ -31,8 +94,7 @@ def route_list():
         question['view_number'] = int(question['view_number'])
         question['vote_number'] = int(question['vote_number'])
 
-    sorted_questions_by_recent = sorted(user_questions, key=itemgetter(
-        order_by), reverse=order_direction == 'desc')
+    sorted_questions_by_recent = sorted(user_questions, key=itemgetter(order_by), reverse=order_direction == 'desc')
     print(sorted_questions_by_recent)
     return render_template('list.html', headers=util.QUESTION_HEADER,
                            stories=sorted_questions_by_recent,
@@ -52,12 +114,23 @@ def question(question_id):
                            tags=data_manager_questions.get_tags(question_id))
 
 
+@app.route('/questions', methods=['GET'])
+def all_questions():
+    user_questions = data_manager_questions.get_latest_questions()
+    all_questions_data = data_manager_questions.get_question_data()
+    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    if 'id' in session:
+        return render_template('questions.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
+    return render_template('questions.html')
+    
+
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
         title = request.form.get('title')
         message = request.form.get('message')
-        id = data_manager_questions.add_question(title, message)
+        user_id = session['id']
+        id = data_manager_questions.add_question(title, message, user_id)
         return redirect(url_for('question', question_id=id['id']))
     return render_template('add-question.html')
 
@@ -210,6 +283,9 @@ def display_users_list():
     users_list = users_manager.get_users_list()
     headers = util.USER_HEADER
     return render_template("users.html", users_list=users_list, headers=headers)
+
+
+
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
