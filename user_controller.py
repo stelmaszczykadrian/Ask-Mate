@@ -55,3 +55,11 @@ def get_current_user_comments(cursor, user_id):
                     WHERE comment.user_id = {user_id}
                     """);
     return cursor.fetchall()
+
+@database_common.connection_handler
+def get_users_list(cursor):
+    query = '''SELECT user_name, registration_date 
+                FROM users 
+                ORDER BY id'''
+    cursor.execute(query)
+    return cursor.fetchall()
