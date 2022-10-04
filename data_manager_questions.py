@@ -220,3 +220,15 @@ def tag_delete_from_question(cursor, question_id, tag_id):
                     AND tag_id = %(tag_id)s
                     """,
                    {'question_id': question_id, 'tag_id': tag_id})
+
+@database_common.connection_handler
+def get_tags_with_numbers(cursor):
+    query = """
+        SELECT tag.name, COUNT(question_tag.tag_id) as number
+        FROM tag
+        LEFT OUTER JOIN question_tag
+        ON tag.id = question_tag.tag_id
+        GROUP BY tag.id;
+         """
+    cursor.execute(query)
+    return cursor.fetchall()

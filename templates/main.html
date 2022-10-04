@@ -15,7 +15,8 @@
 {#            {% endfor %}#}
 {#        </tr>#}
 {#    </thead>#}
-<button><a  class="button-all-question" href="/list">All questions</a></button>
+<button><a  class="button-all-question" href="/list">All questions</a></button><br><br>
+<button><a  class="button-all-question" href="{{ url_for('tag_page') }}">Tags</a></button>
 <form style="float:right" action="/search" method="get">
   <input type="text" name="search_phrase" id="search_phrase">
   <input type="submit" value="Search">
