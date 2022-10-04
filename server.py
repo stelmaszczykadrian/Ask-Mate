@@ -85,7 +85,8 @@ def main():
 def logout():
     session.pop('id', None)
     session.pop('user_name', None)
-    return redirect(url_for("login"))
+    # session.clear()
+    return redirect(url_for("main"))
  
 
 @app.route('/list', methods=['GET'])
