@@ -60,9 +60,9 @@ def registration():
                 flash("You have successfully registered!", category="success")
                 return redirect(url_for('login'))
             else:
-                flash("Error adding to database", category="error")
+                flash("Error adding to database.", category="error")
         else:
-            flash("The form contains errors", category="error")
+            flash("The form contains errors.", category="error")
 
     return render_template('registration.html',  title="register")
     
@@ -112,6 +112,10 @@ def question(question_id):
     user_question = data_manager_questions.get_question_by_id(question_id)
     user_answers = data_manager_answers.get_answers_by_id(question_id)
     user_comments_to_questions = data_manager_questions.get_question_comments(question_id)
+    for answer in user_answers:
+        comments_to_answer = data_manager_answers.get_answers_comments(answer['id'])
+        answer['comments'] = comments_to_answer
+
     return render_template('question.html', question=user_question, answers=user_answers,
                            user_comments_to_questions=user_comments_to_questions, question_id=question_id,
                            tags=data_manager_questions.get_tags(question_id))
@@ -142,7 +146,8 @@ def add_question():
 def add_answer(question_id):
     if request.method == 'POST':
         message = request.form.get('message')
-        data_manager_answers.add_answer(message, question_id)
+        user_id = session['id']
+        data_manager_answers.write_answer(question_id, message, user_id)
         return redirect(url_for('question', question_id=question_id))
     return render_template('new-answer.html', question_id=question_id)
 
@@ -151,8 +156,8 @@ def add_answer(question_id):
 def comment_to_question(question_id):
     if request.method == "POST":
         comment = request.form.get("message")
-        data_manager_questions.add_new_comment(question_id, comment)
-
+        user_id = session['id']
+        data_manager_questions.write_comment(question_id, comment, user_id)
         return redirect("/question/" + str(question_id))
     else:
         return render_template("comment_to_question.html", question_id=question_id)
@@ -212,6 +217,8 @@ def delete_comment(question_id, comment_id):
 @app.route('/question/<int:question_id>/vote-up')
 def question_vote_up(question_id):
     data_manager_questions.vote_up_on_questions(question_id)
+    data_manager_questions.get_question_by_id(question_id)
+
     blink_url = "/question/" + str(question_id)
     return redirect(blink_url)
 
@@ -269,7 +276,6 @@ def delete_tag_from_question(question_id, tag_id):
     data_manager_questions.tag_delete_from_question(question_id, tag_id)
     return redirect(url_for('question', question_id=question_id))
 
-
 @app.route('/tags')
 def tag_page():
     tags = data_manager_questions.get_tags_with_numbers()
@@ -279,7 +285,8 @@ def tag_page():
 def comment_to_answer(answer_id, question_id):
     if request.method == "POST":
         answer_comment = request.form.get("message")
-        data_manager_answers.add_comment_to_answer(answer_comment, answer_id, question_id)
+        user_id = session['id']
+        data_manager_answers.add_comment_to_answer(question_id, answer_id, answer_comment, user_id)
         return redirect("/question/" + str(question_id))
     else:
         return render_template("comment_to_answer.html", answer_id=answer_id, question_id=question_id)
