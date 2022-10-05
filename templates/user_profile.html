@@ -1,4 +1,3 @@
-{%extends "/main.html" %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,7 @@
 {% block content %}
     <ul>
         <li>User ID: {{ user_id }}</li>
-        <li>User: {{ current_user_data['username'] }}</li>
+        <li>User: {{ current_user_data['user_name'] }}</li>
         <li>Registration Date: {{ current_user_data['registration_date'] }}</li>
         <li>Number of asked questions: {{ current_user_data['number_of_asked_questions'] }}</li>
         <li>Number of answers: {{ current_user_data['number_of_answers'] }}</li>
