@@ -300,6 +300,16 @@ def display_users_list():
     headers = util.USER_HEADER
     return render_template("users.html", users_list=users_list, headers=headers)
 
+@app.route('/user/<user_id>')
+def user_details(user_id):
+    current_user_data = user_controler.get_current_user_data(user_id)[0]
+    current_user_questions = user_controler.get_current_user_questions(user_id)
+    current_user_answers = user_controler.get_current_user_answers(user_id)
+    current_user_comments = user_controler.get_current_user_comments(user_id)
+
+    return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
+                                   current_user_questions=current_user_questions, current_user_answers=current_user_answers,
+                                   logged_in=True, current_user_comments=current_user_comments)
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":

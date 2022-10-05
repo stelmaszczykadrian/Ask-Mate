@@ -17,6 +17,8 @@
             {% for user in users_list %}
                 <tr>
                 {% for key,value in user.items() %}
+                    { % if key = 'username' % }
+                    <a href="{{ url_for('question',question_id = value, increment_view_number= True) }}">{{ value }} </a></th>
                     <th>{{ value }}</th>
                 {% endfor %}
             {% endfor %}
