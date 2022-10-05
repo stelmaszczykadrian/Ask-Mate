@@ -184,8 +184,6 @@ def edit_answer(answer_id):
         return redirect(url_for('question', question_id=user_answer['question_id']))
     return render_template('edit_answer.html', answer=user_answer)
 
-
-# jeszcze nie działa :<
 @app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_question_comment(comment_id):
     question_comment = data_manager_questions.get_comment_by_id(comment_id)
@@ -218,34 +216,31 @@ def delete_comment(question_id, comment_id):
 def question_vote_up(question_id):
     user_id = session['id']
     data_manager_questions.vote_up_on_questions(question_id)
-    data_manager_questions.get_question_by_id(question_id)
-    data_manager_questions.change_reputation(user_id)
-
-    blink_url = "/question/" + str(question_id)
-    return redirect(blink_url)
-
+    data_manager_questions.gain_reputation(user_id)
+    return redirect(url_for('question', question_id=question_id))
 
 @app.route('/question/<int:question_id>/vote-down')
 def question_vote_down(question_id):
+    user_id = session['id']
     data_manager_questions.vote_down_on_questions(question_id)
-    blink_url = "/question/" + str(question_id)
-    return redirect(blink_url)
+    data_manager_questions.lose_reputation(user_id)
+    return redirect(url_for('question', question_id=question_id))
 
 @app.route('/answer/<int:answer_id>/vote-up')
 def answer_vote_up(answer_id):
+    user_id = session['id']
     answer = data_manager_answers.get_answer(answer_id)
     data_manager_answers.vote_up_on_answer(answer_id)
-    blink_url = "/question/" + str(answer['question_id'])
-    return redirect(blink_url)
-
+    data_manager_answers.gain_reputation(user_id)
+    return redirect(url_for('question', question_id=answer['question_id']))
 
 @app.route('/answer/<int:answer_id>/vote-down')
 def answer_vote_down(answer_id):
+    user_id = session['id']
     answer = data_manager_answers.get_answer(answer_id)
     data_manager_answers.vote_down_on_answer(answer_id)
-    blink_url = "/question/" + str(answer['question_id'])
-    return redirect(blink_url)
-
+    data_manager_answers.lose_reputation(user_id)
+    return redirect(url_for('question', question_id=answer['question_id']))
 
 @app.route('/search')
 def search():
