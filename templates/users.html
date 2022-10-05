@@ -5,21 +5,19 @@
     <title>Users list</title>
 </head>
 <body>
-    <table BORDER="solid">
+    <table border='solid'>
         <thead>
         <tr>
             {% for header in headers %}
             <th>{{ header }}</th>
             {% endfor %}
         </tr>
-    </thead>
+        </thead>
         <tbody>
             {% for user in users_list %}
                 <tr>
                 {% for key,value in user.items() %}
-                    { % if key = 'username' % }
-                    <a href="{{ url_for('question',question_id = value, increment_view_number= True) }}">{{ value }} </a></th>
-                    <th>{{ value }}</th>
+                    <th>{{ value }}
                 {% endfor %}
             {% endfor %}
             </tr>
