@@ -315,7 +315,6 @@ def user_details(user_id):
     return render_template('main.html')
 
 
-
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
     app.run(
