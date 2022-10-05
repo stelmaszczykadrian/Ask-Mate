@@ -216,8 +216,10 @@ def delete_comment(question_id, comment_id):
 
 @app.route('/question/<int:question_id>/vote-up')
 def question_vote_up(question_id):
+    user_id = session['id']
     data_manager_questions.vote_up_on_questions(question_id)
     data_manager_questions.get_question_by_id(question_id)
+    data_manager_questions.change_reputation(user_id)
 
     blink_url = "/question/" + str(question_id)
     return redirect(blink_url)
