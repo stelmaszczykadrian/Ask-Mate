@@ -138,6 +138,7 @@ def add_question():
         message = request.form.get('message')
         user_id = session['id']
         id = data_manager_questions.add_question(title, message, user_id)
+        user_controller.increase_number_of_questions(user_id)
         return redirect(url_for('question', question_id=id['id']))
     return render_template('add-question.html')
 
@@ -148,6 +149,7 @@ def add_answer(question_id):
         message = request.form.get('message')
         user_id = session['id']
         data_manager_answers.write_answer(question_id, message, user_id)
+        user_controller.increase_number_of_answers(user_id)
         return redirect(url_for('question', question_id=question_id))
     return render_template('new-answer.html', question_id=question_id)
 
@@ -158,6 +160,7 @@ def comment_to_question(question_id):
         comment = request.form.get("message")
         user_id = session['id']
         data_manager_questions.write_comment(question_id, comment, user_id)
+        user_controller.increase_number_of_comments(user_id)
         return redirect("/question/" + str(question_id))
     else:
         return render_template("comment_to_question.html", question_id=question_id)
@@ -216,14 +219,14 @@ def delete_comment(question_id, comment_id):
 def question_vote_up(question_id):
     user_id = session['id']
     data_manager_questions.vote_up_on_questions(question_id)
-    data_manager_questions.gain_reputation(user_id)
+    user_controller.gain_reputation_questions(user_id)
     return redirect(url_for('question', question_id=question_id))
 
 @app.route('/question/<int:question_id>/vote-down')
 def question_vote_down(question_id):
     user_id = session['id']
     data_manager_questions.vote_down_on_questions(question_id)
-    data_manager_questions.lose_reputation(user_id)
+    user_controller.lose_reputation(user_id)
     return redirect(url_for('question', question_id=question_id))
 
 @app.route('/answer/<int:answer_id>/vote-up')
@@ -231,7 +234,7 @@ def answer_vote_up(answer_id):
     user_id = session['id']
     answer = data_manager_answers.get_answer(answer_id)
     data_manager_answers.vote_up_on_answer(answer_id)
-    data_manager_answers.gain_reputation(user_id)
+    user_controller.gain_reputation_answers(user_id)
     return redirect(url_for('question', question_id=answer['question_id']))
 
 @app.route('/answer/<int:answer_id>/vote-down')
@@ -239,7 +242,7 @@ def answer_vote_down(answer_id):
     user_id = session['id']
     answer = data_manager_answers.get_answer(answer_id)
     data_manager_answers.vote_down_on_answer(answer_id)
-    data_manager_answers.lose_reputation(user_id)
+    user_controller.lose_reputation(user_id)
     return redirect(url_for('question', question_id=answer['question_id']))
 
 @app.route('/search')
@@ -284,6 +287,7 @@ def comment_to_answer(answer_id, question_id):
         answer_comment = request.form.get("message")
         user_id = session['id']
         data_manager_answers.add_comment_to_answer(question_id, answer_id, answer_comment, user_id)
+        user_controller.increase_number_of_comments(user_id)
         return redirect("/question/" + str(question_id))
     else:
         return render_template("comment_to_answer.html", answer_id=answer_id, question_id=question_id)

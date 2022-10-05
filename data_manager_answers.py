@@ -143,22 +143,9 @@ def get_comment_data(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
-@database_common.connection_handler
-def gain_reputation(cursor, user_id):
-    query = """
-             UPDATE users
-             SET reputation = reputation + 10
-             WHERE id = %(user_id)s;"""
-    cursor.execute(query, {'user_id': user_id})
 
 
-@database_common.connection_handler
-def lose_reputation(cursor, user_id):
-    query = """
-             UPDATE users
-             SET reputation = reputation - 2
-             WHERE id = %(user_id)s;"""
-    cursor.execute(query, {'user_id': user_id})
+
 
 # @database_common.connection_handler
 # def edit_answer_comment(cursor, message, answer_id):
