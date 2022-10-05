@@ -7,7 +7,7 @@ questions
 {% block body %}
 <h1>All Questions</h1>
 <div class="container_iner">
-   <button class="btn-ask-question"><a class="ask-question" href="#">Ask Question</a></button>
+   <button class="btn-ask-question"><a class="ask-question" href="{{ url_for ('add_question')}}">Ask Question</a></button>
    {% for question in stories %}
    <div class="all-table-question">
       <div class="all-table-question-item">
