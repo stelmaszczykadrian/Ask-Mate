@@ -314,6 +314,8 @@ def user_details(user_id):
                                        logged_in=True, current_user_comments=current_user_comments)
     return render_template('main.html')
 
+
+
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
     app.run(
