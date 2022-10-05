@@ -63,3 +63,53 @@ def get_users_list(cursor):
                 ORDER BY id'''
     cursor.execute(query)
     return cursor.fetchall()
+
+@database_common.connection_handler
+def increase_number_of_questions(cursor, user_id):
+    query = """
+        UPDATE users
+        SET number_of_asked_questions = number_of_asked_questions + 1
+        WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
+
+@database_common.connection_handler
+def increase_number_of_answers(cursor, user_id):
+    query = """
+        UPDATE users
+        SET number_of_answers = number_of_answers + 1
+        WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
+
+@database_common.connection_handler
+def increase_number_of_comments(cursor, user_id):
+    query = """
+        UPDATE users
+        SET number_of_comments = number_of_comments+ 1
+        WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
+
+@database_common.connection_handler
+def gain_reputation_answers(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation + 5
+             WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
+
+
+@database_common.connection_handler
+def gain_reputation_questions(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation + 10
+             WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
+
+
+@database_common.connection_handler
+def lose_reputation(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation - 2
+             WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
