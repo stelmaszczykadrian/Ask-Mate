@@ -58,7 +58,7 @@ def get_current_user_comments(cursor, user_id):
 
 @database_common.connection_handler
 def get_users_list(cursor):
-    query = '''SELECT user_name, registration_date 
+    query = '''SELECT user_name, registration_date
                 FROM users 
                 ORDER BY id'''
     cursor.execute(query)
