@@ -15,8 +15,8 @@
          </ul>
        </div>
        <form class="nav_bar_form" action="/search" method="get">
-         <input type="text" name="search_phrase" id="search_phrase">
-         <input type="submit" value="Search">
+         <input class="nav_bar_form_imput" type="text" name="search_phrase" id="search_phrase" placeholder="Search">
+         <button class="nav_bar_form_btn" type="submit" >Go...</button>
        </form>
        {% if not logged_user %}
        <div class="nav_bar-btn">
@@ -25,21 +25,19 @@
        </div>
        {% else %}
        <div class="nav_bar-btn-alternative">
-       <h3>Wellcome : {{ logged_user.user_name }}</h3>
+       <h3>Welcome : {{ logged_user.user_name }}</h3>
        <button class="btn-nav_bar_alternative"><a class="btn-nav_bar" type="button" href="/main" role="button">Logout</a></button>
       </div>
       {% endif %}
    </div>
-
-   
-
 {% block body %}
 <div class="wrapper">
-<div class="container">
-   <h1>WELCOME to the ASK MATE </h1>
-   <img class="image_main" src="/static/image/recursosprogramadores.png" alt="">
+   <div class="container">
+      <h1>WELCOME to the ASK MATE </h1>
+      <img class="image_main" src="/static/image/recursosprogramadores.png" alt="">
+   </div>
 
-</div>
+{% endblock %}
 <footer class="footer-content">
    <div class="col_01">
       <img class="mb-2" src="/static/image/logo_min-02.png" alt="" width="80" height="65">
@@ -65,7 +63,5 @@
     </div>
 </footer>
 </div>
-{% endblock %}
-
 </body>
 </html>
