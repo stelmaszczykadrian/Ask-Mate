@@ -105,13 +105,6 @@ def get_search_result_answers(cursor, search_phrase):
     cursor.execute(query)
     return cursor.fetchall()
 
-# @database_common.connection_handler
-# def add_comment_to_answer(cursor, message, answer_id, question_id):
-#     submission_time = util.get_time()
-#     query = '''INSERT INTO  comment (answer_id, message, submission_time,question_id,edited_count)
-#     VALUES (%(answer_id)s,%(message)s,  %(submission_time)s, %(question_id)s, 0)'''
-#     cursor.execute(query, {"answer_id": answer_id,"message": message,  "submission_time": submission_time, "question_id" : question_id})
-
 @database_common.connection_handler
 def write_comment_to_answer(cursor, answer_id, message, user_id):
     submission_time = util.get_time()
@@ -149,6 +142,23 @@ def get_comment_data(cursor):
             """
     cursor.execute(query)
     return cursor.fetchall()
+
+@database_common.connection_handler
+def gain_reputation(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation + 10
+             WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
+
+
+@database_common.connection_handler
+def lose_reputation(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation - 2
+             WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
 
 # @database_common.connection_handler
 # def edit_answer_comment(cursor, message, answer_id):
