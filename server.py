@@ -1,12 +1,15 @@
 from operator import itemgetter
 from flask import Flask, render_template, request, url_for, redirect
 from markupsafe import Markup
+import os
 
 import data_manager_answers
 import data_manager_questions
+import database_common
 import util
 
 app = Flask(__name__)
+
 
 @app.route("/bonus-questions")
 def bonus_question():
@@ -50,12 +53,18 @@ def question(question_id):
                            tags=data_manager_questions.get_tags(question_id))
 
 
+app.config["IMAGE_UPLOAD"] = "/c/Users/Eteer/Desktop/CODECOOL PROJEKTY/CODECOOL ZADANIA/week 3 Module 2/zadanie 7 grupowe/ask-mate-3-python-MonikaMarkulis/static/photos"
+
+
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
         title = request.form.get('title')
         message = request.form.get('message')
-        id = data_manager_questions.add_question(title, message)
+        file = request.files['question_pic']
+        file_name = database_common.add_file(file)
+        print(file_name)
+        id = data_manager_questions.add_question(title, message, file_name)
         return redirect(url_for('question', question_id=id['id']))
     return render_template('add-question.html')
 

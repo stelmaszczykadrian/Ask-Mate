@@ -11,6 +11,8 @@
         {{ question['title']}}</p>
     <p>Message:<br>
         {{ question['message']}}</p>
+    <p>Photo:<br>
+        <img src="{{ url_for('static', filename='photos'+ question['image']) }}" width="400" alt="Photo From question that got added by user"/></p>
     <p>
     <form action="{{ url_for('edit_question',question_id=question['id']) }}">
         <button type="submit">Edit Question</button>

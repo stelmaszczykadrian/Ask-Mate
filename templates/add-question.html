@@ -13,18 +13,18 @@
 <body>
 <h1>ASK MATE</h1>
     <h3>Add question</h3>
-    <form action="/add-question" method="post">
+    <form action="/add-question" method="post" enctype="multipart/form-data">
         <p><label for="title">Title:</label><br><br>
             <textarea id="title" name="title" rows="1" cols="60" value=""> </textarea>
         <p><label for="message">Message:</label><br><br>
             <textarea id="message" name="message" rows="4" cols="60" value=""></textarea><br><br>
-            <button type="submit">Save question</button>
+
         <div>
-        <label for="question_pic">Add Picture</label>
-        <input type="file" id="question_pic" name="question_pic" accept=".jpg, .jpeg, .png" />
+        <label for="question_pic">Add Picture</label><br>
+        <input type="file" id="question_pic" name="question_pic" accept=".jpg, .jpeg, .png">
         </div>
         <div>
-            <button>Submit</button>
+             <button type="submit">Save question</button>
         </div>
     </form>
 

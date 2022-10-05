@@ -3,6 +3,7 @@ from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 import util
 
+
 @database_common.connection_handler
 def get_question_data(cursor):
     query = """ SELECT * 
@@ -11,6 +12,7 @@ def get_question_data(cursor):
 
     cursor.execute(query)
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def get_latest_questions(cursor):
@@ -22,8 +24,9 @@ def get_latest_questions(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @database_common.connection_handler
-def get_question_comments(cursor,question_id):
+def get_question_comments(cursor, question_id):
     query = """ SELECT * 
                 FROM comment 
                 WHERE question_id=%(question_id)s
@@ -55,16 +58,18 @@ def get_comment_by_id(cursor, comment_id):
     cursor.execute(query, {'comment_id': comment_id})
     return cursor.fetchone()
 
+
 @database_common.connection_handler
-def add_question(cursor, title, message,):
+def add_question(cursor, title, message, file_name):
     submission_time = util.get_time()
-    query = """
-                INSERT INTO question
-                VALUES (DEFAULT,%(submission_time)s, 0, 0, %(title)s, %(message)s, NULL)
+    query = f"""
+                INSERT INTO question(submission_time,view_number,vote_number,title,message,image)
+                VALUES ('{submission_time}', 0, 0, '{title}', '{message}', '{file_name}')
                 RETURNING id;
             """
-    cursor.execute(query, {'submission_time': submission_time, 'title': title, 'message': message})
+    cursor.execute(query)
     return cursor.fetchone()
+
 
 @database_common.connection_handler
 def add_new_comment(cursor, question_id, message):
@@ -74,6 +79,7 @@ def add_new_comment(cursor, question_id, message):
         VALUES (%(question_id)s, %(message)s, %(submission_time)s, 0)
         """
     cursor.execute(query, {"question_id": question_id, "message": message, "submission_time": submission_time})
+
 
 @database_common.connection_handler
 def edit_question(cursor, title, message, question_id):
@@ -100,6 +106,7 @@ def edit_question_comment(cursor, message, comment_id):
             """
     cursor.execute(query, {'message': message, 'comment_id': comment_id, 'submission_time': submission_time})
 
+
 @database_common.connection_handler
 def delete_question(cursor, question_id):
     query = """
@@ -114,7 +121,6 @@ def delete_question(cursor, question_id):
                 
                 """
     cursor.execute(query, {'question_id': question_id})
-
 
 
 @database_common.connection_handler
@@ -157,6 +163,8 @@ def count_visits(cursor, id):
 
                 """
     cursor.execute(query, {'id': id})
+
+
 @database_common.connection_handler
 def get_search_result_questions(cursor, search_phrase):
     query = f""" SELECT * 
@@ -211,6 +219,7 @@ def add_new_tag(cursor, new_tag: str, question_id):
                        {'question_id': question_id, 'tag_id': tag_id})
     except:
         pass
+
 
 @database_common.connection_handler
 def tag_delete_from_question(cursor, question_id, tag_id):

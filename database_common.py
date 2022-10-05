@@ -50,3 +50,14 @@ def connection_handler(function):
         return ret_value
 
     return wrapper
+
+
+def add_file(file_item):
+    try:
+        file_name = os.path.basename(file_item.filename)
+        file_name = "static/photos/" + file_name
+        open(file_name, "wb").write(file_item.read())
+    except:
+        file_name = "NULL"
+    finally:
+        return file_name[13:len(file_name)]
