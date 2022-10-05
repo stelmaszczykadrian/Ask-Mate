@@ -17,7 +17,11 @@
             {% for user in users_list %}
                 <tr>
                 {% for key,value in user.items() %}
-                    <th>{{ value }}
+                    {% if key == 'user_name' %}
+                    <th><a href="{{ url_for('user_details',user_id=user['id']) }}">{{ value }} </a></th>
+                    {% else %}
+                    <th>{{ value }}</th>>
+                    {% endif %}
                 {% endfor %}
             {% endfor %}
             </tr>

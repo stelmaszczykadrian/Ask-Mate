@@ -293,18 +293,22 @@ def display_users_list():
     users_list = user_controller.get_users_list()
     print(users_list)
     headers = util.USER_HEADER
-    return render_template("users.html", users_list=users_list, headers=headers)
+    if 'id' in session:
+        return render_template("users.html", users_list=users_list, headers=headers)
+    return render_template('main.html')
 
-@app.route('/user/<user_id>')
+@app.route('/users/<user_id>')
 def user_details(user_id):
     current_user_data = user_controller.get_current_user_data(user_id)[0]
+    print(current_user_data)
     current_user_questions = user_controller.get_current_user_questions(user_id)
     current_user_answers = user_controller.get_current_user_answers(user_id)
     current_user_comments = user_controller.get_current_user_comments(user_id)
-
-    return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
-                                   current_user_questions=current_user_questions, current_user_answers=current_user_answers,
-                                   logged_in=True, current_user_comments=current_user_comments)
+    if 'id' in session:
+        return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
+                                       current_user_questions=current_user_questions, current_user_answers=current_user_answers,
+                                       logged_in=True, current_user_comments=current_user_comments)
+    return render_template('main.html')
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
