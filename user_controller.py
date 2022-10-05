@@ -3,7 +3,7 @@ from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
 @database_common.connection_handler
-def get_current_user_id(cursor,email):
+def get_current_user_id(cursor, email):
     cursor.execute(f"""
                     SELECT id
                     FROM users
@@ -26,7 +26,7 @@ def get_current_user_data(cursor, user_id):
 @database_common.connection_handler
 def get_current_user_questions(cursor,user_id):
     cursor.execute(f"""
-                    SELECT *
+                    SELECT question.submission_time, question.view_number, question.vote_number, question.title, question.message, question.image
                     FROM question
                     LEFT JOIN users
                     ON question.user_id=users.id
