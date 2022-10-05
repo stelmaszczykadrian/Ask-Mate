@@ -1,88 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Questions</title>
-    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
-</head>
-<body>
+{% extends 'main.html' %}
+{% block title %}
+question
+{% endblock %}
+
+{% block body %}
 <h1>ASK MATE</h1>
-    <p>Title:<br>
-        {{ question['title']}}</p>
-    <p>Message:<br>
-        {{ question['message']}}</p>
-    <p>
-    <form action="{{ url_for('edit_question',question_id=question['id']) }}">
-        <button type="submit">Edit Question</button>
-    </form>
-    <br>
-    <form action="{{ url_for('comment_to_question',question_id=question['id']) }}">
-        <button type="submit">Add comment question</button>
-    </form>
-    </p>
-    <p>Votes:
-        {{ question['vote_number']}}</p>
-    {% for tag in tags %}
-                {{ tag['name'] }}
-                <a href="{{ url_for('delete_tag_from_question', question_id=question_id, tag_id=tag['id']) }}">X</a>
-            {% endfor %}
-    <form action="{{ url_for('add_tag_to_question', question_id=question_id) }}">
-        <button class="button" id="home" type="submit" class="view">Add tag</button>
-    </form>
-    <p>Comments to question: </p>
-    {% for comment in user_comments_to_questions %}
-        <p> {{ comment['message'] }}</p>
-        {% if comment['edited_count'] > 0 %}
+<div class="container">
+    <div class="question-title">{{ question['title']}}</div>
+    <div>
+        <div>Votes:{{ question['vote_number']}}</div>
+        <div>Comments to question:
+            {% for comment in user_comments_to_questions %}
+            <p> {{ comment['message'] }}</p>
+            {% if comment['edited_count'] > 0 %}
             <p>Edited {{ comment['edited_count'] }} times.</p>
-        {% endif %}
-        <form action="{{ url_for('edit_question_comment',comment_id=comment['id']) }}">
-            <button type="submit">Edit Comment</button>
-        </form>
-        <br>
-        <form action="{{ url_for('delete_comment',question_id=question['id'], comment_id=comment['id']) }}" method="POST"
-        onsubmit="return confirm('Do you want to delete a comment?')">
-            <button type="submit">Delete Comment</button>
-        </form><br><br>
-    {% endfor %}
-    <p>Answers: </p>
-    {% for answer in answers %}
-        <p>{{ answer['message'] }} {{ answer['vote_number'] }}
-            <a href="/answer/{{answer['id']}}/vote-up">Vote Up</a><a href="/answer/{{answer['id']}}/vote-down">Vote Down</a>
-        <br>
-        <form action="{{ url_for('edit_answer', answer_id=answer['id']) }}">
-            <button type="submit">Edit answer</button>
-        </form>
-        <br>
-        <form action="{{ url_for('delete_answer',question_id=question['id'],answer_id=answer['id']) }}">
-            <button type="submit">Delete answer</button>
-        </form>
-        <br>
-        <form action="{{ url_for('comment_to_answer', answer_id=answer['id'], question_id=question['id']) }}">
+            {% endif %}
+            <form action="{{ url_for('edit_question_comment',comment_id=comment['id']) }}">
+                <button type="submit">Edit Comment</button>
+            </form>
+            <br>
+            <form action="{{ url_for('delete_comment',question_id=question['id'], comment_id=comment['id']) }}"
+                method="POST" onsubmit="return confirm('Do you want to delete a comment?')">
+                <button class="btn"><i class="fa fa-trash"></i></button>
+            </form>
+            {% endfor %}
+        </div>
+        <div>
+            <p>Answers: </p>
+            {% for answer in answers %}
+            <p>{{ answer['message'] }} {{ answer['vote_number'] }}
+                <a href="/answer/{{answer['id']}}/vote-up">Vote Up</a><a href="/answer/{{answer['id']}}/vote-down">Vote
+                    Down</a>
+            <form action="{{ url_for('delete_answer',question_id=question['id'],answer_id=answer['id']) }}">
+                <button type="submit">Delete answer</button>
+            </form>
+            <br>
+            <form action="{{ url_for('edit_answer', answer_id=answer['id']) }}">
+                <button type="submit">Edit answer</button>
+            </form>
+            <br>
+            <form action="{{ url_for('comment_to_answer', answer_id=answer['id'], question_id=question['id']) }}">
                 <button type="submit">Add comment to answer.</button>
-        </form>
-        </p>
-        <p>Comments to answer: </p>
-        {% for comment in answer['comments'] %}
+            </form>
+            </p>
+            <p>Comments to answer: </p>
+            {% for comment in answer['comments'] %}
             <p>{{ comment['message'] }}</p>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="question-message">{{ question['message']}}</div>
+    <div class="question-message-item"></div>
+
+    <div class="question-block-btn">
+        <form class="block-btn-form" action="{{ url_for('edit_question',question_id=question['id']) }}">
+            <button class="btn-nav_bar" type="submit">Edit Question</button>
+        </form>
+
+        <form class="block-btn-form" action="{{ url_for('comment_to_question',question_id=question['id']) }}">
+            <button class="btn-nav_bar" type="submit">Add comment question</button>
+        </form>
+
+        {% for tag in tags %}
+        {{ tag['name'] }}
+        <a href="{{ url_for('delete_tag_from_question', question_id=question_id, tag_id=tag['id']) }}">X</a>
         {% endfor %}
-    {% endfor %}
-    <br><br><br><br><br>
-    <form action="{{ url_for('add_answer',question_id=question['id']) }}">
-        <button type="submit">Add answer</button>
-    </form><br>
-    <form action="{{ url_for('delete_question',question_id=question['id']) }}">
-        <button type="submit">Delete question</button><br><br>
-    </form>
-    <form action="/question/{{ question['id'] }}/vote-up">
-        <button type="submit">Vote UP</button>
-    </form>
-    <br>
-    <form action="/question/{{ question['id'] }}/vote-down">
-        <button type="submit">Vote DOWN</button>
-    </form>
-    <br><br>
-    <form action="/list">
-        <button type="submit">BACK TO MENU</button>
-    </form>
-</body>
-</html>
+        <form class="block-btn-form" action="{{ url_for('add_tag_to_question', question_id=question_id) }}">
+            <button class="btn-nav_bar" id="home" type="submit" class="view">Add tag</button>
+        </form>
+    </div>
+
+
+
+    <div class="question-block-btn-iner">
+        <form action="{{ url_for('add_answer',question_id=question['id']) }}">
+            <button class="btn-question-block" type="submit">Add answer</button>
+        </form>
+        <form action="{{ url_for('delete_question',question_id=question['id']) }}">
+            <button class="btn-question-block" type="submit">Delete question</button>
+        </form>
+        <form action="/question/{{ question['id'] }}/vote-up">
+            <button class="btn-question-block" type="submit">Vote UP</button>
+        </form>
+        <form action="/question/{{ question['id'] }}/vote-down">
+            <button class="btn-question-block" type="submit">Vote DOWN</button>
+        </form>
+        <form action="/list">
+            <button class="btn-question-block" type="submit">BACK TO MENU</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
