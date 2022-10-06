@@ -119,7 +119,6 @@ def edit_question_comment(cursor, message, comment_id):
                     submission_time = %(submission_time)s,
                     edited_count = edited_count + 1 
                 WHERE id = %(comment_id)s
-
             """
     cursor.execute(query, {'message': message, 'comment_id': comment_id, 'submission_time': submission_time})
 
@@ -154,7 +153,6 @@ def vote_up_on_questions(cursor, question_id):
                     UPDATE question
                     SET vote_number = vote_number + 1
                     WHERE id=%(question_id)s
-
                 """
     cursor.execute(query, {'question_id': question_id})
 
@@ -165,7 +163,6 @@ def vote_down_on_questions(cursor, question_id):
                     UPDATE question
                     SET vote_number = vote_number - 1
                     WHERE id=%(question_id)s
-
                 """
     cursor.execute(query, {'question_id': question_id})
 
@@ -176,7 +173,6 @@ def count_visits(cursor, id):
                     UPDATE question
                     SET view_number = view_number + 1
                     WHERE id=%(id)s
-
                 """
     cursor.execute(query, {'id': id})
 @database_common.connection_handler
@@ -255,4 +251,12 @@ def get_tags_with_numbers(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
-
+@database_common.connection_handler
+def get_question_by_answer_id(cursor, answer_id):
+    query="""
+    SELECT question_id 
+    FROM answer
+    WHERE id = %s;
+    """
+    cursor.execute(query, (answer_id))
+    return cursor.fetchone()

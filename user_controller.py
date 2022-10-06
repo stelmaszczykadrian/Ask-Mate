@@ -3,7 +3,7 @@ from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
 @database_common.connection_handler
-def get_current_user_id(cursor,email):
+def get_current_user_id(cursor, email):
     cursor.execute(f"""
                     SELECT id
                     FROM users
@@ -26,7 +26,7 @@ def get_current_user_data(cursor, user_id):
 @database_common.connection_handler
 def get_current_user_questions(cursor,user_id):
     cursor.execute(f"""
-                    SELECT *
+                    SELECT question.submission_time, question.view_number, question.vote_number, question.title, question.message, question.image
                     FROM question
                     LEFT JOIN users
                     ON question.user_id=users.id
@@ -112,4 +112,28 @@ def lose_reputation(cursor, user_id):
              UPDATE users
              SET reputation = reputation - 2
              WHERE id = %(user_id)s;"""
+    cursor.execute(query, {'user_id': user_id})
+
+@database_common.connection_handler
+def change_accepted_state(cursor, answer_id):
+    query = """
+             UPDATE answer
+             SET accepted = NOT accepted
+             WHERE id = %s;"""
+    cursor.execute(query, (answer_id, ))
+
+@database_common.connection_handler
+def gain_reputation_acceptance(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation + 15
+             WHERE id = %(user_id)s"""
+    cursor.execute(query, {'user_id': user_id})
+
+@database_common.connection_handler
+def loose_reputation_acceptance(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation - 15
+             WHERE id = %(user_id)s"""
     cursor.execute(query, {'user_id': user_id})
