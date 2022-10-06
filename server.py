@@ -1,15 +1,9 @@
 from operator import itemgetter
 from flask import Flask, render_template, request, url_for, redirect, flash, session
-from bonus_questions import SAMPLE_QUESTIONS
-
-from markupsafe import Markup
 from datetime import datetime
 import time
 from werkzeug.security import generate_password_hash, check_password_hash
-
-import user_controller
-import data_manager_answers
-import data_manager_questions
+import user_controller, data_manager_answers, data_manager_questions
 import util
 from bonus_questions import SAMPLE_QUESTIONS
 
@@ -68,16 +62,16 @@ def registration():
     
 @app.route("/bonus-questions")
 def bonus_question():
+    if 'id' in session:
+        return render_template('bonus-questions.html', questions=SAMPLE_QUESTIONS, logged_user = get_logged_user())
     return render_template('bonus-questions.html', questions=SAMPLE_QUESTIONS)
 
 
 @app.route("/", methods=['GET'])
 def main():
     user_questions = data_manager_questions.get_latest_questions()
-    all_questions_data = data_manager_questions.get_question_data()
-    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
     if 'id' in session:
-        return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
+        return render_template('main.html', headers=data_manager_questions.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
     return render_template('main.html')
 
 
@@ -99,7 +93,7 @@ def route_list():
 
     sorted_questions_by_recent = sorted(user_questions, key=itemgetter(order_by), reverse=order_direction == 'desc')
     print(sorted_questions_by_recent)
-    return render_template('list.html', headers=util.QUESTION_HEADER,
+    return render_template('list.html', headers=data_manager_questions.QUESTION_HEADER,
                            stories=sorted_questions_by_recent,
                            order_by=order_by, order_direction=order_direction, questions=user_questions)
 
@@ -127,7 +121,7 @@ def all_questions():
     all_questions_data = data_manager_questions.get_question_data()
     #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
     if 'id' in session:
-        return render_template('questions.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
+        return render_template('questions.html', headers=data_manager_questions.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
     return render_template('questions.html')
     
 
@@ -161,7 +155,7 @@ def comment_to_question(question_id):
         user_id = session['id']
         data_manager_questions.write_comment(question_id, comment, user_id)
         user_controller.increase_number_of_comments(user_id)
-        return redirect("/question/" + str(question_id))
+        return redirect(url_for('question', question_id=question_id))
     else:
         return render_template("comment_to_question.html", question_id=question_id)
 
@@ -173,8 +167,7 @@ def edit_question(question_id):
         title = request.form.get('title')
         message = request.form.get('message')
         data_manager_questions.edit_question(title, message, question_id)
-        blink_url = "/question/" + str(question_id)
-        return redirect(blink_url)
+        return redirect(url_for('question', question_id=question_id))
     return render_template('edit_question.html', question=user_question, question_id=question_id)
 
 
@@ -194,7 +187,6 @@ def edit_question_comment(comment_id):
         message = request.form.get('message')
         data_manager_questions.edit_question_comment(message, comment_id)
         return redirect(url_for('question', question_id=question_comment['question_id']))
-
     return render_template('edit_comment.html', comment=question_comment)
 
 
@@ -256,7 +248,7 @@ def search():
         if element['id'] not in list_of_id:
             list_of_id.append(element['id'])
             search_results.append(element)
-    return render_template('search.html', headers=util.QUESTION_HEADER, stories=search_results,
+    return render_template('search.html', headers=data_manager_questions.QUESTION_HEADER, stories=search_results,
                            search_phrase=search_phrase)
 
 
@@ -279,6 +271,8 @@ def delete_tag_from_question(question_id, tag_id):
 @app.route('/tags')
 def tag_page():
     tags = data_manager_questions.get_tags_with_numbers()
+    if 'id' in session:
+        return render_template('tags.html', tags=tags, logged_user = get_logged_user())
     return render_template('tags.html', tags=tags)
 
 @app.route("/question/<int:question_id>/answer/<int:answer_id>/new-comment", methods=['GET', 'POST'])
@@ -288,7 +282,7 @@ def comment_to_answer(answer_id, question_id):
         user_id = session['id']
         data_manager_answers.add_comment_to_answer(question_id, answer_id, answer_comment, user_id)
         user_controller.increase_number_of_comments(user_id)
-        return redirect("/question/" + str(question_id))
+        return redirect(url_for('question', question_id=question_id))
     else:
         return render_template("comment_to_answer.html", answer_id=answer_id, question_id=question_id)
 
@@ -296,9 +290,9 @@ def comment_to_answer(answer_id, question_id):
 def display_users_list():
     users_list = user_controller.get_users_list()
     print(users_list)
-    headers = util.USER_HEADER
+    headers = user_controller.USER_HEADER
     if 'id' in session:
-        return render_template("users.html", users_list=users_list, headers=headers)
+        return render_template("users.html", users_list=users_list, headers=headers, logged_user = get_logged_user())
     return render_template('main.html')
 
 @app.route('/users/<user_id>')
@@ -311,11 +305,10 @@ def user_details(user_id):
     if 'id' in session:
         return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
                                        current_user_questions=current_user_questions, current_user_answers=current_user_answers,
-                                       logged_in=True, current_user_comments=current_user_comments)
+                                       logged_in=True, current_user_comments=current_user_comments, logged_user = get_logged_user())
     return render_template('main.html')
 
 
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
     app.run(
         debug=True,

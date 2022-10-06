@@ -3,7 +3,7 @@ from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 import util
 
-
+QUESTION_HEADER = ['title', 'message', 'view number', 'title', 'message']
 @database_common.connection_handler
 def addUser(cursor, new_user):
     cursor.execute("""INSERT INTO users

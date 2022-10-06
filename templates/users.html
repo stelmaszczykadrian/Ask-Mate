@@ -22,7 +22,7 @@ Users list
                   {% if key == 'user_name' %}
                   <td><a href="{{ url_for('user_details',user_id=user['id']) }}">{{ value }} </a></td>
                   {% else %}
-                  <td>{{ value }}</td>>
+                  <td>{{ value }}</td>
                   {% endif %}
               {% endfor %}
           {% endfor %}
