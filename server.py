@@ -40,16 +40,16 @@ def login():
             invalid_credentials = True
             print("bad login")
 
-    return render_template('login.html',  title="authorization", invalid_credentials=invalid_credentials)
- 
- 
+    return render_template('login.html', title="authorization", invalid_credentials=invalid_credentials)
+
+
 @app.route("/registration", methods=["POST", 'GET'])
 def registration():
     ts_epoch = (int(time.time()))
     new_user = {}
     if request.method == "POST":
         if len(request.form['email']) > 4 \
-           and len(request.form['psw']) > 3:
+                and len(request.form['psw']) > 3:
             hash = generate_password_hash(request.form['psw'])
             new_user['user_name'] = request.form['email']
             new_user['password'] = hash
@@ -64,8 +64,9 @@ def registration():
         else:
             flash("The form contains errors.", category="error")
 
-    return render_template('registration.html',  title="register")
-    
+    return render_template('registration.html', title="register")
+
+
 @app.route("/bonus-questions")
 def bonus_question():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
@@ -75,9 +76,10 @@ def bonus_question():
 def main():
     user_questions = data_manager_questions.get_latest_questions()
     all_questions_data = data_manager_questions.get_question_data()
-    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    # return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
     if 'id' in session:
-        return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
+        return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions,
+                               logged_user=get_logged_user())
     return render_template('main.html')
 
 
@@ -86,7 +88,7 @@ def logout():
     session.pop('id', None)
     session.pop('user_name', None)
     return redirect(url_for("login"))
- 
+
 
 @app.route('/list', methods=['GET'])
 def route_list():
@@ -125,11 +127,12 @@ def question(question_id):
 def all_questions():
     user_questions = data_manager_questions.get_latest_questions()
     all_questions_data = data_manager_questions.get_question_data()
-    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    # return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
     if 'id' in session:
-        return render_template('questions.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
+        return render_template('questions.html', headers=util.QUESTION_HEADER, stories=user_questions,
+                               logged_user=get_logged_user())
     return render_template('questions.html')
-    
+
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
@@ -197,6 +200,17 @@ def edit_question_comment(comment_id):
     return render_template('edit_comment.html', comment=question_comment)
 
 
+@app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_answer_comment(comment_id):
+    answer_comment = data_manager_questions.get_comment_by_id(comment_id)
+    if request.method == 'POST':
+        message = request.form.get('message')
+        data_manager_questions.edit_question_comment(message, comment_id)
+        return redirect(url_for('question', question_id=answer_comment['answer_id']))
+
+    return render_template('edit_comment.html', comment=answer_comment)
+
+
 @app.route('/question/<int:question_id>/delete', methods=['GET'])
 def delete_question(question_id):
     data_manager_questions.delete_question(question_id)
@@ -214,6 +228,7 @@ def delete_comment(question_id, comment_id):
     data_manager_questions.delete_comment(comment_id)
     return redirect(url_for('question', question_id=question_id))
 
+
 @app.route('/question/<int:question_id>/vote-up')
 def question_vote_up(question_id):
     user_id = session['id']
@@ -230,6 +245,7 @@ def question_vote_down(question_id):
     data_manager_questions.vote_down_on_questions(question_id)
     blink_url = "/question/" + str(question_id)
     return redirect(blink_url)
+
 
 @app.route('/answer/<int:answer_id>/vote-up')
 def answer_vote_up(answer_id):
@@ -278,10 +294,12 @@ def delete_tag_from_question(question_id, tag_id):
     data_manager_questions.tag_delete_from_question(question_id, tag_id)
     return redirect(url_for('question', question_id=question_id))
 
+
 @app.route('/tags')
 def tag_page():
     tags = data_manager_questions.get_tags_with_numbers()
     return render_template('tags.html', tags=tags)
+
 
 @app.route("/question/<int:question_id>/answer/<int:answer_id>/new-comment", methods=['GET', 'POST'])
 def comment_to_answer(answer_id, question_id):
@@ -293,12 +311,14 @@ def comment_to_answer(answer_id, question_id):
     else:
         return render_template("comment_to_answer.html", answer_id=answer_id, question_id=question_id)
 
+
 @app.route('/users')
 def display_users_list():
     users_list = user_controller.get_users_list()
     print(users_list)
     headers = util.USER_HEADER
     return render_template("users.html", users_list=users_list, headers=headers)
+
 
 @app.route('/user/<user_id>')
 def user_details(user_id):
@@ -308,8 +328,9 @@ def user_details(user_id):
     current_user_comments = user_controler.get_current_user_comments(user_id)
 
     return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
-                                   current_user_questions=current_user_questions, current_user_answers=current_user_answers,
-                                   logged_in=True, current_user_comments=current_user_comments)
+                           current_user_questions=current_user_questions, current_user_answers=current_user_answers,
+                           logged_in=True, current_user_comments=current_user_comments)
+
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
