@@ -1,28 +1,32 @@
 {% extends 'main.html' %}
 
 {% block title %}
-questions
+bonus-questions
 {% endblock %}
 
 {% block body %}
 <h1>AskMate</h1>
 <div class="container">
-        <h2>All Questions:</h2>
-        <button id="theme-button">Change Theme to Dark</button>
-        <button id="increase-font-button">Increase page font</button>
-        <button id="decrease-font-button">Decrease page font</button>
-        <input
-                data-table-body="doNotModifyThisId_QuestionsTableBody"
-                style="width: 500px" id="doNotModifyThisId_QuestionsFilter"
-                type="text"
-                placeholder="filter questions by keywords">
-        <table>
+        <h3>Bonus Questions:</h3>
+        <div class="bonus-heder">
+            <button id="theme-button">Change Theme to Dark</button>
+            <button id="increase-font-button">Increase page font</button>
+            <button id="decrease-font-button">Decrease page font</button>
+            <div class="bonus-heder-input">
+               <input class="bonus-input"
+                  data-table-body="doNotModifyThisId_QuestionsTableBody"
+                  style="width: 500px" id="doNotModifyThisId_QuestionsFilter"
+                  type="text"
+                  placeholder="filter questions by keywords">
+            </div>
+        </div>
+        <table class="table-bonus">
             <thead id="doNotModifyThisId_QuestionsTableHeader">
                 <tr>
-                    <td>Title</td>
-                    <td>Description</td>
-                    <td>Vote Count</td>
-                    <td>View Number</td>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Vote Count</th>
+                    <th>View Number</th>
                 </tr>
             </thead>
             <tbody id="doNotModifyThisId_QuestionsTableBody">

@@ -500,3 +500,59 @@ margin-bottom: 20px;
    min-width: 1000px;
    padding: 0px 40px;
 }
+
+/*===========bonus-questions=================*/
+.bonus-heder{
+   margin: 20px 0px 30px 0px;
+   display: flex;
+   justify-content: space-between;
+   padding: 20px ;
+   box-shadow: -4px 9px 22px -13px rgba(66, 68, 90, 1);
+}
+
+.bonus-heder button {
+   margin-right: 20px;
+   padding: 5px;
+}
+
+
+.bonus-input{
+   height: 30px;
+   margin-left: 25px;
+   padding: 5px 10px;
+   border-radius: 5px;
+   border: 1px solid #6b6b6b;
+   
+}
+
+.table-bonus {
+	width: 100%;
+	margin-bottom: 20px;
+	border: 5px solid #fff;
+	border-top: 5px solid #fff;
+	border-bottom: 3px solid #fff;
+	border-collapse: collapse; 
+	outline: 3px solid #9db7f8;
+	font-size: 15px;
+	background: #fff!important;
+}
+.table-bonus th {
+	font-weight: bold;
+	padding: 7px;
+	background: #9db7f8;
+	border: none;
+	text-align: left;
+	font-size: 15px;
+	border-top: 3px solid #fff;
+	border-bottom: 3px solid #9db7f8;
+}
+.table-bonus td {
+	padding: 7px;
+	border: none;
+	border-top: 3px solid #fff;
+	border-bottom: 3px solid #fff;
+	font-size: 15px;
+}
+.table-bonus tbody tr:nth-child(even){
+	background: #f8f8f8!important;
+}
