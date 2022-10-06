@@ -190,6 +190,17 @@ def edit_question_comment(comment_id):
     return render_template('edit_comment.html', comment=question_comment)
 
 
+@app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_answer_comment(comment_id):
+    answer_comment = data_manager_questions.get_comment_by_id(comment_id)
+    if request.method == 'POST':
+        message = request.form.get('message')
+        data_manager_questions.edit_question_comment(message, comment_id)
+        return redirect(url_for('question', question_id=answer_comment['answer_id']))
+
+    return render_template('edit_comment.html', comment=answer_comment)
+
+
 @app.route('/question/<int:question_id>/delete', methods=['GET'])
 def delete_question(question_id):
     data_manager_questions.delete_question(question_id)
@@ -308,6 +319,18 @@ def user_details(user_id):
                                        logged_in=True, current_user_comments=current_user_comments, logged_user = get_logged_user())
     return render_template('main.html')
 
+@app.route('/accept-answer/<answer_id>', methods=['POST'])
+def accept_answer(answer_id):
+    question = data_manager_questions.get_question_by_answer_id(answer_id)
+    answer = data_manager_answers.get_one_answers_by_id(answer_id)
+    question_id = question['question_id']
+    user_controller.change_accepted_state(answer_id)
+    print(answer['user_id'])
+    if answer['accepted'] == True:
+        user_controller.loose_reputation_acceptance(answer['user_id'])
+    else:
+        user_controller.gain_reputation_acceptance(answer['user_id'])
+    return redirect(url_for("question", question_id=question_id))
 
 if __name__ == "__main__":
     app.run(

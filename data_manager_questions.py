@@ -250,3 +250,13 @@ def get_tags_with_numbers(cursor):
          """
     cursor.execute(query)
     return cursor.fetchall()
+
+@database_common.connection_handler
+def get_question_by_answer_id(cursor, answer_id):
+    query="""
+    SELECT question_id 
+    FROM answer
+    WHERE id = %s;
+    """
+    cursor.execute(query, (answer_id))
+    return cursor.fetchone()
