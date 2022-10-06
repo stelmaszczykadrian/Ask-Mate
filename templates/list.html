@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'main.html' %}
+{% block title %}
+list
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Ask Mate List</title>
-    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
-</head>
-<body>
+{% block body %}
+
 <h1>ASK MATE</h1>
-<button><a  class="button-all-question" href="/">Back</a></button>
+
+<div class="container-list">
+   <button class="btn-ask-question"><a  class="button-all-question" href="/">Back</a></button>
 <form action="/list">
     <label for="order_by">
       Sort by:
@@ -38,7 +38,7 @@
         Descending
       </option>
     </select>
-    <button type="submit">Sort</button>
+    <button class=" btn-nav_bar" type="submit">Sort</button>
   </form>
 
 <br>
@@ -68,9 +68,9 @@
 </table>
 
 <form action="{{ url_for ('add_question')}}">
-    <button type="submit">Add question</button>
+    <button class="btn-ask-question" type="submit">Add question</button>
 </form>
-
-</body>
-
-</html>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

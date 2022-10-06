@@ -68,7 +68,7 @@ def registration():
     
 @app.route("/bonus-questions")
 def bonus_question():
-    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
+    return render_template('bonus-questions.html', questions=SAMPLE_QUESTIONS)
 
 
 @app.route("/", methods=['GET'])
@@ -133,7 +133,7 @@ def all_questions():
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    if request.method == 'POST':
+    if  request.method == 'POST' :
         title = request.form.get('title')
         message = request.form.get('message')
         user_id = session['id']
@@ -196,6 +196,17 @@ def edit_question_comment(comment_id):
         return redirect(url_for('question', question_id=question_comment['question_id']))
 
     return render_template('edit_comment.html', comment=question_comment)
+
+
+@app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_answer_comment(comment_id):
+    answer_comment = data_manager_questions.get_comment_by_id(comment_id)
+    if request.method == 'POST':
+        message = request.form.get('message')
+        data_manager_questions.edit_question_comment(message, comment_id)
+        return redirect(url_for('question', question_id=answer_comment['answer_id']))
+
+    return render_template('edit_comment.html', comment=answer_comment)
 
 
 @app.route('/question/<int:question_id>/delete', methods=['GET'])
@@ -313,6 +324,19 @@ def user_details(user_id):
                                        current_user_questions=current_user_questions, current_user_answers=current_user_answers,
                                        logged_in=True, current_user_comments=current_user_comments)
     return render_template('main.html')
+
+@app.route('/accept-answer/<answer_id>', methods=['POST'])
+def accept_answer(answer_id):
+    question = data_manager_questions.get_question_by_answer_id(answer_id)
+    answer = data_manager_answers.get_one_answers_by_id(answer_id)
+    question_id = question['question_id']
+    user_controller.change_accepted_state(answer_id)
+    print(answer['user_id'])
+    if answer['accepted'] == True:
+        user_controller.loose_reputation_acceptance(answer['user_id'])
+    else:
+        user_controller.gain_reputation_acceptance(answer['user_id'])
+    return redirect(url_for("question", question_id=question_id))
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
