@@ -315,10 +315,10 @@ def user_details(user_id):
     return render_template('main.html')
 
 @app.route('/accept-answer/<answer_id>', methods=['POST'])
-def mark_answer(answer_id):
-    question = data_manager_question.get_question_by_answer_id(answer_id)
+def accept_answer(answer_id):
+    question = data_manager_questions.get_question_by_answer_id(answer_id)
     question_id = question['question_id']
-    data_manager.change_accepted_state(answer_id)
+    user_controller.change_accepted_state(answer_id)
     return redirect(url_for("display_question", question_id=question_id))
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
