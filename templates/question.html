@@ -45,11 +45,11 @@ question
                 </form>
                 </form>
                 {% if answer['accepted'] == False %}
-                <form action="{{ url_for(" accept_answer", answer_id=answer['id']) }}" method="POST">
+                <form action="{{ url_for("accept_answer", answer_id=answer['id']) }}" method="POST">
                     <button class="btn-block-button" type="submit">ACCEPTED</button>
                 </form>
                 {% else %}
-                <form action="{{ url_for(" accept_answer", answer_id=answer['id']) }}" method="POST">
+                <form action="{{ url_for("accept_answer", answer_id=answer['id']) }}" method="POST">
                     <button class="btn-block-button" type="submit">NOT ACCEPTED</button>
                     {% endif %}
                 </form>
