@@ -68,7 +68,7 @@ def registration():
     
 @app.route("/bonus-questions")
 def bonus_question():
-    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
+    return render_template('bonus-questions.html', questions=SAMPLE_QUESTIONS)
 
 
 @app.route("/", methods=['GET'])

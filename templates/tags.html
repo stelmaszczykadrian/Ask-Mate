@@ -1,26 +1,28 @@
 {% extends 'main.html' %}
-
 {% block title %}
-tags
+Tags
 {% endblock %}
 
 {% block body %}
 <h1>ASK MATE</h1>
 <div class="container">
-<h3>Tags list:</h3><br><br>
-<table border=solid>
+    <h3>Tags list:</h3>
+<table class="table">
     <thead>
-    <th>Tag name</th>
-    <th>Times used</th>
+    <tr>
+        <th>Tag name</th>
+        <th>Times used</th>
+    </tr>
     </thead>
+    <tbody>
     {% for tag in tags %}
     <tr>
         <td>{{ tag['name'] }}</td>
         <td> {{ tag['number'] }}</td>
     </tr>
     {% endfor %}
-</table><br><br>
-<button><a  class="button-all-question" href="/">Back</a></button>
+    </tbody>
+</table>
 </div>
 {% endblock %}
 {% block footer %}
