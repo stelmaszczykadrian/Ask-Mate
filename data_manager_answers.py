@@ -4,6 +4,7 @@ from psycopg2.extras import RealDictCursor
 
 import util
 
+
 @database_common.connection_handler
 def get_question_id_by_answer_id(cursor, answer_id):
     query = f"""
@@ -91,7 +92,6 @@ def vote_up_on_answer(cursor, answer_id):
                     UPDATE answer
                     SET vote_number = vote_number + 1
                     WHERE id=%(answer_id)s
-
                 """
     cursor.execute(query, {'answer_id': answer_id})
 
@@ -102,7 +102,6 @@ def vote_down_on_answer(cursor, answer_id):
                     UPDATE answer
                     SET vote_number = vote_number - 1
                     WHERE id=%(answer_id)s
-
                 """
     cursor.execute(query, {'answer_id': answer_id})
 
@@ -141,7 +140,6 @@ def add_comment_to_answer(cursor, question_id, answer_id, message, user_id):
     query = f"""
                     INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_id)
                     VALUES ({question_id}, {answer_id}, '{message}', '{submission_time}', 0, '{user_id}') 
-
             """
     cursor.execute(query)
 @database_common.connection_handler
