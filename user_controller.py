@@ -2,6 +2,7 @@ import database_common
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
+USER_HEADER = ['id', 'username', 'registration date', 'asked_questions', 'answers', 'comments', 'reputation']
 @database_common.connection_handler
 def get_current_user_id(cursor, email):
     cursor.execute(f"""
