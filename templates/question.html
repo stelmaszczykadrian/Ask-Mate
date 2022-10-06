@@ -43,6 +43,16 @@ question
                 <form action="{{ url_for('comment_to_answer', answer_id=answer['id'], question_id=question['id']) }}">
                     <button class="btn-block-button" type="submit">Add comment to answer.</button>
                 </form>
+                </form>
+                {% if answer['accepted'] == False %}
+                    <form action="{{ url_for("accept_answer", answer_id = answer['id']) }}" method="POST">
+                        <button class="btn-block-button" type="submit">ACCEPTED</button>
+                    </form>
+                    {% else %}
+                        <form action="{{ url_for("accept_answer", answer_id = answer['id']) }}" method="POST">
+                            <button class="btn-block-button" type="submit">NOT ACCEPTED</button>
+                    {% endif %}
+            </form>
             </div>
             <div class="comment-answer"><span>Comments to answer: </span></div>
             {% for comment in answer['comments'] %}
