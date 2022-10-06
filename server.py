@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import user_controller, data_manager_answers, data_manager_questions
+import user_controller, data_manager_answers, data_manager_questions, logic
 from bonus_questions import SAMPLE_QUESTIONS
-import logic
 
 app = Flask(__name__)
 app.secret_key = 'ghbdtn93vbh65bdctv407yfv'
@@ -16,7 +15,6 @@ def get_logged_user():
 
 @app.route("/login", methods=["POST", 'GET'])
 def login():
-    user = {}
     invalid_credentials = False
     if request.method == "POST":
         user_name = request.form['email']
@@ -84,22 +82,19 @@ def question(question_id):
 
     return render_template('question.html', question=user_question, answers=user_answers,
                            user_comments_to_questions=user_comments_to_questions, question_id=question_id,
-                           tags=data_manager_questions.get_tags(question_id))
+                           tags=data_manager_questions.get_tags(question_id), logged_user = get_logged_user())
 
 @app.route('/questions', methods=['GET'])
 def all_questions():
     user_questions = data_manager_questions.get_latest_questions()
-    all_questions_data = data_manager_questions.get_question_data()
-
     if 'id' in session:
         return render_template('questions.html', headers=data_manager_questions.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
     return render_template('questions.html')
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    if  request.method == 'POST' :
+    if request.method == 'POST' :
         id = logic.add_question()
-
         return redirect(url_for('question', question_id=id['id']))
     return render_template('add-question.html')
 
@@ -107,7 +102,6 @@ def add_question():
 def add_answer(question_id):
     if request.method == 'POST':
         logic.add_answer(question_id)
-
         return redirect(url_for('question', question_id=question_id))
     return render_template('new-answer.html', question_id=question_id)
 
@@ -115,7 +109,6 @@ def add_answer(question_id):
 def comment_to_question(question_id):
     if request.method == "POST":
         logic.add_comment_to_question(question_id)
-
         return redirect(url_for('question', question_id=question_id))
     else:
         return render_template("comment_to_question.html", question_id=question_id)
@@ -125,7 +118,6 @@ def edit_question(question_id):
     user_question = data_manager_questions.get_question_by_id(question_id)
     if request.method == 'POST':
         logic.edit_question(question_id)
-
         return redirect(url_for('question', question_id=question_id))
     return render_template('edit_question.html', question=user_question, question_id=question_id)
 
@@ -134,7 +126,6 @@ def edit_answer(answer_id):
     user_answer = data_manager_answers.get_answer(answer_id)
     if request.method == 'POST':
         logic.edit_answer(answer_id)
-
         return redirect(url_for('question', question_id=user_answer['question_id']))
     return render_template('edit_answer.html', answer=user_answer)
 
@@ -143,7 +134,6 @@ def edit_question_comment(comment_id):
     question_comment = data_manager_questions.get_comment_by_id(comment_id)
     if request.method == 'POST':
         logic.edit_question_comment(comment_id)
-
         return redirect(url_for('question', question_id=question_comment['question_id']))
     return render_template('edit_comment.html', comment=question_comment)
 
@@ -152,7 +142,6 @@ def edit_answer_comment(comment_id):
     answer_comment = data_manager_questions.get_comment_by_id(comment_id)
     if request.method == 'POST':
         logic.edit_answer_comment(comment_id)
-
         return redirect(url_for('question', question_id=answer_comment['answer_id']))
     return render_template('edit_comment.html', comment=answer_comment)
 
@@ -230,7 +219,6 @@ def comment_to_answer(answer_id, question_id):
 @app.route('/users')
 def display_users_list():
     users_list = user_controller.get_users_list()
-
     if 'id' in session:
         return render_template("users.html", users_list=users_list, headers=user_controller.USER_HEADER, logged_user = get_logged_user())
     return render_template('main.html')
@@ -238,7 +226,6 @@ def display_users_list():
 @app.route('/users/<user_id>')
 def user_details(user_id):
     current_user_data, current_user_questions, current_user_answers, current_user_comments = logic.user_details(user_id)
-
     if 'id' in session:
         return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
                                        current_user_questions=current_user_questions, current_user_answers=current_user_answers,

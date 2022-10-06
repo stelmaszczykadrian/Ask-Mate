@@ -12,7 +12,6 @@ def addUser(cursor, new_user):
                        'time': new_user['registration_date'],
                    })
 
-
 @database_common.connection_handler
 def get_user_password(cursor, user_name):
     cursor.execute("""SELECT id, password FROM users
