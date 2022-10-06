@@ -1,15 +1,15 @@
-{%extends "/main.html" %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User profile</title>
-</head>
-<body>
-{% block content %}
+{% extends 'main.html' %}
+
+{% block title %}
+User profile
+{% endblock %}
+
+{% block body %}
+<h1>ASK MATE</h1>
+<div class="container">
     <ul>
         <li>User ID: {{ user_id }}</li>
-        <li>User: {{ current_user_data['username'] }}</li>
+        <li>User: {{ current_user_data['user_name'] }}</li>
         <li>Registration Date: {{ current_user_data['registration_date'] }}</li>
         <li>Number of asked questions: {{ current_user_data['number_of_asked_questions'] }}</li>
         <li>Number of answers: {{ current_user_data['number_of_answers'] }}</li>
@@ -29,11 +29,7 @@
         {% for question in current_user_questions %}
             <tr>
             {% for data in question %}
-                {% if data == 'title' %}
-                    <td><a href="/question/{{ question['id'] }}">{{ question[data] }}</a></td>
-                {% elif data != 'id' %}
                     <td>{{ question[data] }}</td>
-                {% endif %}
             {% endfor %}
             </tr>
         {% endfor %}
@@ -72,6 +68,5 @@
         {% endfor %}
         </tbody>
     </table>
-{%endblock%}
-</body>
-</html>
+</div>
+{% endblock %}

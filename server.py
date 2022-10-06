@@ -40,16 +40,16 @@ def login():
             invalid_credentials = True
             print("bad login")
 
-    return render_template('login.html', title="authorization", invalid_credentials=invalid_credentials)
-
-
+    return render_template('login.html',  title="authorization", invalid_credentials=invalid_credentials)
+ 
+ 
 @app.route("/registration", methods=["POST", 'GET'])
 def registration():
     ts_epoch = (int(time.time()))
     new_user = {}
     if request.method == "POST":
         if len(request.form['email']) > 4 \
-                and len(request.form['psw']) > 3:
+           and len(request.form['psw']) > 3:
             hash = generate_password_hash(request.form['psw'])
             new_user['user_name'] = request.form['email']
             new_user['password'] = hash
@@ -64,22 +64,20 @@ def registration():
         else:
             flash("The form contains errors.", category="error")
 
-    return render_template('registration.html', title="register")
-
-
+    return render_template('registration.html',  title="register")
+    
 @app.route("/bonus-questions")
 def bonus_question():
-    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
+    return render_template('bonus-questions.html', questions=SAMPLE_QUESTIONS)
 
 
 @app.route("/", methods=['GET'])
 def main():
     user_questions = data_manager_questions.get_latest_questions()
     all_questions_data = data_manager_questions.get_question_data()
-    # return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
     if 'id' in session:
-        return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions,
-                               logged_user=get_logged_user())
+        return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
     return render_template('main.html')
 
 
@@ -88,7 +86,7 @@ def logout():
     session.pop('id', None)
     session.pop('user_name', None)
     return redirect(url_for("login"))
-
+ 
 
 @app.route('/list', methods=['GET'])
 def route_list():
@@ -127,20 +125,20 @@ def question(question_id):
 def all_questions():
     user_questions = data_manager_questions.get_latest_questions()
     all_questions_data = data_manager_questions.get_question_data()
-    # return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
+    #return render_template('main.html', headers=util.QUESTION_HEADER, stories=user_questions)
     if 'id' in session:
-        return render_template('questions.html', headers=util.QUESTION_HEADER, stories=user_questions,
-                               logged_user=get_logged_user())
+        return render_template('questions.html', headers=util.QUESTION_HEADER, stories=user_questions, logged_user = get_logged_user())
     return render_template('questions.html')
-
+    
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    if request.method == 'POST':
+    if  request.method == 'POST' :
         title = request.form.get('title')
         message = request.form.get('message')
         user_id = session['id']
         id = data_manager_questions.add_question(title, message, user_id)
+        user_controller.increase_number_of_questions(user_id)
         return redirect(url_for('question', question_id=id['id']))
     return render_template('add-question.html')
 
@@ -151,6 +149,7 @@ def add_answer(question_id):
         message = request.form.get('message')
         user_id = session['id']
         data_manager_answers.write_answer(question_id, message, user_id)
+        user_controller.increase_number_of_answers(user_id)
         return redirect(url_for('question', question_id=question_id))
     return render_template('new-answer.html', question_id=question_id)
 
@@ -161,6 +160,7 @@ def comment_to_question(question_id):
         comment = request.form.get("message")
         user_id = session['id']
         data_manager_questions.write_comment(question_id, comment, user_id)
+        user_controller.increase_number_of_comments(user_id)
         return redirect("/question/" + str(question_id))
     else:
         return render_template("comment_to_question.html", question_id=question_id)
@@ -187,8 +187,6 @@ def edit_answer(answer_id):
         return redirect(url_for('question', question_id=user_answer['question_id']))
     return render_template('edit_answer.html', answer=user_answer)
 
-
-# jeszcze nie działa :<
 @app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_question_comment(comment_id):
     question_comment = data_manager_questions.get_comment_by_id(comment_id)
@@ -228,40 +226,35 @@ def delete_comment(question_id, comment_id):
     data_manager_questions.delete_comment(comment_id)
     return redirect(url_for('question', question_id=question_id))
 
-
 @app.route('/question/<int:question_id>/vote-up')
 def question_vote_up(question_id):
     user_id = session['id']
     data_manager_questions.vote_up_on_questions(question_id)
-    data_manager_questions.get_question_by_id(question_id)
-    data_manager_questions.change_reputation(user_id)
-
-    blink_url = "/question/" + str(question_id)
-    return redirect(blink_url)
-
+    user_controller.gain_reputation_questions(user_id)
+    return redirect(url_for('question', question_id=question_id))
 
 @app.route('/question/<int:question_id>/vote-down')
 def question_vote_down(question_id):
+    user_id = session['id']
     data_manager_questions.vote_down_on_questions(question_id)
-    blink_url = "/question/" + str(question_id)
-    return redirect(blink_url)
-
+    user_controller.lose_reputation(user_id)
+    return redirect(url_for('question', question_id=question_id))
 
 @app.route('/answer/<int:answer_id>/vote-up')
 def answer_vote_up(answer_id):
+    user_id = session['id']
     answer = data_manager_answers.get_answer(answer_id)
     data_manager_answers.vote_up_on_answer(answer_id)
-    blink_url = "/question/" + str(answer['question_id'])
-    return redirect(blink_url)
-
+    user_controller.gain_reputation_answers(user_id)
+    return redirect(url_for('question', question_id=answer['question_id']))
 
 @app.route('/answer/<int:answer_id>/vote-down')
 def answer_vote_down(answer_id):
+    user_id = session['id']
     answer = data_manager_answers.get_answer(answer_id)
     data_manager_answers.vote_down_on_answer(answer_id)
-    blink_url = "/question/" + str(answer['question_id'])
-    return redirect(blink_url)
-
+    user_controller.lose_reputation(user_id)
+    return redirect(url_for('question', question_id=answer['question_id']))
 
 @app.route('/search')
 def search():
@@ -294,12 +287,10 @@ def delete_tag_from_question(question_id, tag_id):
     data_manager_questions.tag_delete_from_question(question_id, tag_id)
     return redirect(url_for('question', question_id=question_id))
 
-
 @app.route('/tags')
 def tag_page():
     tags = data_manager_questions.get_tags_with_numbers()
     return render_template('tags.html', tags=tags)
-
 
 @app.route("/question/<int:question_id>/answer/<int:answer_id>/new-comment", methods=['GET', 'POST'])
 def comment_to_answer(answer_id, question_id):
@@ -307,30 +298,45 @@ def comment_to_answer(answer_id, question_id):
         answer_comment = request.form.get("message")
         user_id = session['id']
         data_manager_answers.add_comment_to_answer(question_id, answer_id, answer_comment, user_id)
+        user_controller.increase_number_of_comments(user_id)
         return redirect("/question/" + str(question_id))
     else:
         return render_template("comment_to_answer.html", answer_id=answer_id, question_id=question_id)
-
 
 @app.route('/users')
 def display_users_list():
     users_list = user_controller.get_users_list()
     print(users_list)
     headers = util.USER_HEADER
-    return render_template("users.html", users_list=users_list, headers=headers)
+    if 'id' in session:
+        return render_template("users.html", users_list=users_list, headers=headers)
+    return render_template('main.html')
 
-
-@app.route('/user/<user_id>')
+@app.route('/users/<user_id>')
 def user_details(user_id):
-    current_user_data = user_controler.get_current_user_data(user_id)[0]
-    current_user_questions = user_controler.get_current_user_questions(user_id)
-    current_user_answers = user_controler.get_current_user_answers(user_id)
-    current_user_comments = user_controler.get_current_user_comments(user_id)
+    current_user_data = user_controller.get_current_user_data(user_id)[0]
+    print(current_user_data)
+    current_user_questions = user_controller.get_current_user_questions(user_id)
+    current_user_answers = user_controller.get_current_user_answers(user_id)
+    current_user_comments = user_controller.get_current_user_comments(user_id)
+    if 'id' in session:
+        return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
+                                       current_user_questions=current_user_questions, current_user_answers=current_user_answers,
+                                       logged_in=True, current_user_comments=current_user_comments)
+    return render_template('main.html')
 
-    return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
-                           current_user_questions=current_user_questions, current_user_answers=current_user_answers,
-                           logged_in=True, current_user_comments=current_user_comments)
-
+@app.route('/accept-answer/<answer_id>', methods=['POST'])
+def accept_answer(answer_id):
+    question = data_manager_questions.get_question_by_answer_id(answer_id)
+    answer = data_manager_answers.get_one_answers_by_id(answer_id)
+    question_id = question['question_id']
+    user_controller.change_accepted_state(answer_id)
+    print(answer['user_id'])
+    if answer['accepted'] == True:
+        user_controller.loose_reputation_acceptance(answer['user_id'])
+    else:
+        user_controller.gain_reputation_acceptance(answer['user_id'])
+    return redirect(url_for("question", question_id=question_id))
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":

@@ -1,19 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'main.html' %}
+{% block title %}
+new answer
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Update</title>
-    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
-</head>
-
-<body>
+{% block body %}
 <h1>ASK MATE</h1>
+<div class="container">
     <form action='/question/{{ question_id}}/new-answer' method="post">
         <p><label for="message">Add answer:</label><br><br>
             <textarea id="message" name="message" rows="4" cols="60" value=""></textarea><br><br>
-            <button type="submit">Save answer</button>
+            <button class="btn-ask-question" type="submit">Save answer</button>
     </form>
-</body>
-
-</html>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
