@@ -7,26 +7,25 @@
 <body>
     <table border='solid'>
         <thead>
-        <tr>
             {% for header in headers %}
-            <th>{{ header }}</th>
+                <th>{{ header }}</th>
             {% endfor %}
-        </tr>
         </thead>
-        <tbody>
+            <tbody>
             {% for user in users_list %}
                 <tr>
                 {% for key,value in user.items() %}
+                    <td>
                     {% if key == 'user_name' %}
-                    <th><a href="{{ url_for('user_details',user_id=user['id']) }}">{{ value }} </a></th>
+                        <a href="{{ url_for('user_details',user_id=user['id']) }}">{{ value }} </a>
                     {% else %}
-                    <th>{{ value }}</th>>
+                        {{ value }}
                     {% endif %}
+                    </td>
                 {% endfor %}
+                </tr>
             {% endfor %}
-            </tr>
         </tbody>
-
     </table>
 </body>
 </html>
