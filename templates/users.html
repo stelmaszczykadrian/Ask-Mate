@@ -9,26 +9,25 @@ Users list
    <h3>Users List </h3>
    <table class="table">
       <thead>
-      <tr>
+       <tr>
           {% for header in headers %}
           <th>{{ header }}</th>
           {% endfor %}
-      </tr>
+       </tr>
       </thead>
       <tbody>
           {% for user in users_list %}
               <tr>
               {% for key,value in user.items() %}
                   {% if key == 'user_name' %}
-                  <td><a href="{{ url_for('user_details',user_id=user['id']) }}">{{ value }} </a></td>
+                  <td><a href="{{ url_for('user_details',user_id=user['id']) }}">{{ value }}</a></td>
                   {% else %}
-                  <td>{{ value }}</td>>
+                  <td>{{ value }}</td>
                   {% endif %}
               {% endfor %}
           {% endfor %}
           </tr>
       </tbody>
-
   </table>
 </div>
 {% endblock %}
