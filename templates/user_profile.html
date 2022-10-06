@@ -1,12 +1,12 @@
-{%extends "/main.html" %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User profile</title>
-</head>
-<body>
-{% block content %}
+{% extends 'main.html' %}
+
+{% block title %}
+User profile
+{% endblock %}
+
+{% block body %}
+<h1>ASK MATE</h1>
+<div class="container">
     <ul>
         <li>User ID: {{ user_id }}</li>
         <li>User: {{ current_user_data['username'] }}</li>
@@ -72,6 +72,5 @@
         {% endfor %}
         </tbody>
     </table>
-{%endblock%}
-</body>
-</html>
+</div>
+{% endblock %}

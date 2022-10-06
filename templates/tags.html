@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'main.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Ask Mate</title>
-    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
-</head>
-<body>
+{% block title %}
+tags
+{% endblock %}
+
+{% block body %}
 <h1>ASK MATE</h1>
-
+<div class="container">
 <h3>Tags list:</h3><br><br>
 <table border=solid>
     <thead>
@@ -23,5 +21,7 @@
     {% endfor %}
 </table><br><br>
 <button><a  class="button-all-question" href="/">Back</a></button>
-</body>
-</html>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
