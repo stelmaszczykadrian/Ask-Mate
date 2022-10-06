@@ -121,3 +121,19 @@ def change_accepted_state(cursor, answer_id):
              SET accepted = NOT accepted
              WHERE id = %s;"""
     cursor.execute(query, (answer_id, ))
+
+@database_common.connection_handler
+def gain_reputation_acceptance(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation + 15
+             WHERE id = %(user_id)s"""
+    cursor.execute(query, {'user_id': user_id})
+
+@database_common.connection_handler
+def loose_reputation_acceptance(cursor, user_id):
+    query = """
+             UPDATE users
+             SET reputation = reputation - 15
+             WHERE id = %(user_id)s"""
+    cursor.execute(query, {'user_id': user_id})

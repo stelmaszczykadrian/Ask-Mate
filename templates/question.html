@@ -44,7 +44,7 @@ question
             </form>
                 {% if answer['accepted'] == False %}
                     <form action="{{ url_for("accept_answer", answer_id = answer['id']) }}" method="POST">
-                        <button type="submit">MARK ACCEPTED</button>
+                        <button type="submit">ACCEPTED</button>
                     </form>
                     {% else %}
                         <form action="{{ url_for("accept_answer", answer_id = answer['id']) }}" method="POST">

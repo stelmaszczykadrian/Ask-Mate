@@ -33,6 +33,16 @@ def get_answers_by_id(cursor, id):
     cursor.execute(query)
     return cursor.fetchall()
 
+@database_common.connection_handler
+def get_one_answers_by_id(cursor, answer_id):
+    query = f"""
+                SELECT *
+                FROM answer
+                WHERE id = {answer_id}
+                """
+    cursor.execute(query)
+    return cursor.fetchone()
+
 
 @database_common.connection_handler
 def get_answer(cursor, id):
@@ -51,8 +61,8 @@ def write_answer(cursor, question_id, message, user_id):
     image = ''
     query = """
     INSERT INTO answer (submission_time, vote_number, question_id, message, image, accepted, user_id) 
-    VALUES (%s, %s, %s, %s, %s, False,%s);"""
-    cursor.execute(query, (submission_time, vote_number, question_id, message, image, accepted,user_id))
+    VALUES (%s, %s, %s, %s, %s, %s, %s);"""
+    cursor.execute(query, (submission_time, vote_number, question_id, message, image, False, user_id))
 
 @database_common.connection_handler
 def edit_answer(cursor, message, id):
@@ -113,6 +123,7 @@ def write_comment_to_answer(cursor, answer_id, message, user_id):
     INSERT INTO comment (answer_id, message, submission_time, edited_count, user_id) 
     VALUES (%s, %s, %s, %s, %s);"""
     cursor.execute(query, (answer_id, message, submission_time,edited_count, user_id))
+
 @database_common.connection_handler
 def get_answers_comments(cursor, answer_id):
     query = """ SELECT * 
