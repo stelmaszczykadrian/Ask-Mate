@@ -3,7 +3,7 @@ from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
 import util
-
+ANSWER_HEADER = ['submission_time', 'vote_number', 'question_id', 'message']
 
 @database_common.connection_handler
 def get_question_id_by_answer_id(cursor, answer_id):
