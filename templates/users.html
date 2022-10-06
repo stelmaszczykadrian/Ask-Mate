@@ -6,31 +6,32 @@ Users list
 {% block body %}
 <h1>ASK MATE</h1>
 <div class="container">
-   <h3>Users List </h3>
-   <table class="table">
-      <thead>
-          {% for header in headers %}
-          <th>{{ header }}</th>
-          {% endfor %}
-      </thead>
-      <tbody>
-          {% for user in users_list %}
-              <tr>
-              {% for key,value in user.items() %}
-                  <td>
-                  {% if key == 'user_name' %}
-                  <a href="{{ url_for('user_details',user_id=user['id']) }}">{{ value }} </a>
-                  {% else %}
-                  {{ value }}
-                  {% endif %}
-                  </td>
-              {% endfor %}
-              </tr>
-          {% endfor %}
-      </tbody>
-  </table>
+    <h3>Users List </h3>
+    <table class="table">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users_list %}
+            <tr>
+                {% for key,value in user.items() %}
+                <td>
+                    {% if key == 'user_name' %}
+                <td><a href="{{ url_for('user_details',user_id=user['id']) }}">{{ value }}</a></td>
+                {% else %}
+                <td>{{ value }}</td>
+                {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
 {% block footer %}
 {% endblock %}
-
