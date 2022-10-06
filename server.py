@@ -133,7 +133,7 @@ def all_questions():
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    if request.method == 'POST':
+    if  request.method == 'POST' :
         title = request.form.get('title')
         message = request.form.get('message')
         user_id = session['id']
