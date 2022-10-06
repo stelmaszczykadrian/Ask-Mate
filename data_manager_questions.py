@@ -1,7 +1,4 @@
-import database_common
-from psycopg2 import sql
-from psycopg2.extras import RealDictCursor
-import util
+import database_common, logic
 
 QUESTION_HEADER = ['title', 'message', 'view number', 'title', 'message']
 @database_common.connection_handler
@@ -80,7 +77,7 @@ def get_comment_by_id(cursor, comment_id):
 
 @database_common.connection_handler
 def add_question(cursor, title, message, user_id):
-    submission_time = util.get_time()
+    submission_time = logic.get_time()
     query = """
                 INSERT INTO question
                 (submission_time, view_number, vote_number, title, message, user_id)
@@ -92,7 +89,7 @@ def add_question(cursor, title, message, user_id):
 
 @database_common.connection_handler
 def write_comment(cursor, question_id, message, user_id):
-    submission_time = util.get_time()
+    submission_time = logic.get_time()
     edited_count = 0
     query = """
     INSERT INTO comment (question_id, message, submission_time, edited_count, user_id) 
@@ -112,7 +109,7 @@ def edit_question(cursor, title, message, question_id):
 
 @database_common.connection_handler
 def edit_question_comment(cursor, message, comment_id):
-    submission_time = util.get_time()
+    submission_time = logic.get_time()
     query = """
                 UPDATE comment
                 SET message = %(message)s,
