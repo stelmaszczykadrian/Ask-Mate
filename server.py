@@ -317,9 +317,15 @@ def user_details(user_id):
 @app.route('/accept-answer/<answer_id>', methods=['POST'])
 def accept_answer(answer_id):
     question = data_manager_questions.get_question_by_answer_id(answer_id)
+    answer = data_manager_answers.get_one_answers_by_id(answer_id)
     question_id = question['question_id']
     user_controller.change_accepted_state(answer_id)
-    return redirect(url_for("display_question", question_id=question_id))
+    print(answer['user_id'])
+    if answer['accepted'] == True:
+        user_controller.loose_reputation_acceptance(answer['user_id'])
+    else:
+        user_controller.gain_reputation_acceptance(answer['user_id'])
+    return redirect(url_for("question", question_id=question_id))
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 if __name__ == "__main__":
