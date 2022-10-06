@@ -50,9 +50,9 @@ def write_answer(cursor, question_id, message, user_id):
     vote_number = 0
     image = ''
     query = """
-    INSERT INTO answer (submission_time, vote_number, question_id, message, image, user_id) 
-    VALUES (%s, %s, %s, %s, %s, %s);"""
-    cursor.execute(query, (submission_time, vote_number, question_id, message, image, user_id))
+    INSERT INTO answer (submission_time, vote_number, question_id, message, image, accepted, user_id) 
+    VALUES (%s, %s, %s, %s, %s, False,%s);"""
+    cursor.execute(query, (submission_time, vote_number, question_id, message, image, accepted,user_id))
 
 @database_common.connection_handler
 def edit_answer(cursor, message, id):
