@@ -27,7 +27,6 @@ question
             </form>
          </div>
             {% endfor %}
-      
         <div class="answers-block"><span>Answers:</span>
             {% for answer in answers %}
             <div class="body-comment">{{ answer['message'] }} {{ answer['vote_number'] }}</div>
@@ -43,6 +42,15 @@ question
                  <form action="{{ url_for('comment_to_answer', answer_id=answer['id'], question_id=question['id']) }}">
                  <button class="btn-block-button"type="submit">Add comment to answer.</button>
                   </form>
+                  {% if answer['accepted'] == False %}
+                    <form action="{{ url_for("accept_answer", answer_id = answer['id']) }}" method="POST">
+                        <button class="btn-block-button" type="submit">ACCEPTED</button>
+                    </form>
+                    {% else %}
+                        <form action="{{ url_for("accept_answer", answer_id = answer['id']) }}" method="POST">
+                            <button class="btn-block-button" type="submit">NOT ACCEPTED</button>
+                    {% endif %}
+            </form>
             </div>
             <div class="comment-answer"><span>Comments to answer: </span></div>
             {% for comment in answer['comments'] %}
@@ -54,11 +62,9 @@ question
         <form class="block-btn-form" action="{{ url_for('edit_question',question_id=question['id']) }}">
             <button class="btn-block-button" type="submit">Edit Question</button>
         </form>
-
         <form class="block-btn-form" action="{{ url_for('comment_to_question',question_id=question['id']) }}">
             <button class="btn-block-button" type="submit">Add comment question</button>
         </form>
-
         {% for tag in tags %}
         {{ tag['name'] }}
         <a href="{{ url_for('delete_tag_from_question', question_id=question_id, tag_id=tag['id']) }}">X</a>
@@ -67,7 +73,6 @@ question
             <button class="btn-block-button" id="home" type="submit" class="view">Add tag</button>
         </form>
     </div>
-
     <div class="question-block-btn-iner">
         <form action="{{ url_for('add_answer',question_id=question['id']) }}">
             <button class="btn-question-block" type="submit">Add answer</button>
