@@ -28,11 +28,7 @@
         {% for question in current_user_questions %}
             <tr>
             {% for data in question %}
-                {% if data == 'title' %}
-                    <td><a href="/question/{{ question['id'] }}">{{ question[data] }}</a></td>
-                {% elif data != 'id' %}
                     <td>{{ question[data] }}</td>
-                {% endif %}
             {% endfor %}
             </tr>
         {% endfor %}
