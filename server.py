@@ -198,6 +198,17 @@ def edit_question_comment(comment_id):
     return render_template('edit_comment.html', comment=question_comment)
 
 
+@app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_answer_comment(comment_id):
+    answer_comment = data_manager_questions.get_comment_by_id(comment_id)
+    if request.method == 'POST':
+        message = request.form.get('message')
+        data_manager_questions.edit_question_comment(message, comment_id)
+        return redirect(url_for('question', question_id=answer_comment['answer_id']))
+
+    return render_template('edit_comment.html', comment=answer_comment)
+
+
 @app.route('/question/<int:question_id>/delete', methods=['GET'])
 def delete_question(question_id):
     data_manager_questions.delete_question(question_id)
