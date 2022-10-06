@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-                <title>Edit Answer</title>
-    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
-</head>
-<body>
+{% extends 'main.html' %}
+{% block title %}
+Edit Answer
+{% endblock %}
+
+{% block body %}
 <h1>ASK MATE</h1>
+<div class="container">
     <h3>Edit answer</h3>
     <form action='/answer/{{ answer['id'] }}/edit' method="POST">
         <p><label for="message">Message:</label><br><br>
             <textarea id="message" name="message" rows="4" cols="60"> {{ answer['message'] }}</textarea><br><br>
             <button type="submit">Save answer</button>
     </form>
-
-</body>
-</html>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
