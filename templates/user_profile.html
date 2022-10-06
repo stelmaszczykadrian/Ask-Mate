@@ -14,11 +14,11 @@ User profile
         <li>Number of asked questions: {{ current_user_data['number_of_asked_questions'] }}</li>
         <li>Number of answers: {{ current_user_data['number_of_answers'] }}</li>
         <li>Number of comments: {{ current_user_data['number_of_comments'] }}</li>
-        <li>Reputation: Coming Soon</li>
+        <li>Reputation: {{ current_user_data['reputation'] }}</li>
     </ul>
     <h1>User Questions:</h1>
-    <table>
-        <thead>
+    <table class="table">
+      <thead>
             <th>Submission time</th>
             <th>View number</th>
             <th>Vote number</th>
@@ -36,8 +36,8 @@ User profile
         </tbody>
     </table>
 <h1>User Answers:</h1>
-<table>
-        <thead>
+<table class="table">
+      <thead>
             <th>Submission time</th>
             <th>Vote number</th>
             <th>Message</th>
@@ -53,8 +53,8 @@ User profile
         </tbody>
     </table>
 <h1>User Comments:</h1>
-<table>
-        <thead>
+<table class="table">
+      <thead>
             <th>Submission time</th>
             <th>Message</th>
             <th>Edited_count</th>
