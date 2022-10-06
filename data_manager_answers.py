@@ -4,6 +4,7 @@ from psycopg2.extras import RealDictCursor
 
 import util
 
+
 @database_common.connection_handler
 def get_question_id_by_answer_id(cursor, answer_id):
     query = f"""
@@ -81,7 +82,6 @@ def vote_up_on_answer(cursor, answer_id):
                     UPDATE answer
                     SET vote_number = vote_number + 1
                     WHERE id=%(answer_id)s
-
                 """
     cursor.execute(query, {'answer_id': answer_id})
 
@@ -92,7 +92,6 @@ def vote_down_on_answer(cursor, answer_id):
                     UPDATE answer
                     SET vote_number = vote_number - 1
                     WHERE id=%(answer_id)s
-
                 """
     cursor.execute(query, {'answer_id': answer_id})
 
@@ -104,13 +103,6 @@ def get_search_result_answers(cursor, search_phrase):
                 """
     cursor.execute(query)
     return cursor.fetchall()
-
-# @database_common.connection_handler
-# def add_comment_to_answer(cursor, message, answer_id, question_id):
-#     submission_time = util.get_time()
-#     query = '''INSERT INTO  comment (answer_id, message, submission_time,question_id,edited_count)
-#     VALUES (%(answer_id)s,%(message)s,  %(submission_time)s, %(question_id)s, 0)'''
-#     cursor.execute(query, {"answer_id": answer_id,"message": message,  "submission_time": submission_time, "question_id" : question_id})
 
 @database_common.connection_handler
 def write_comment_to_answer(cursor, answer_id, message, user_id):
@@ -137,7 +129,6 @@ def add_comment_to_answer(cursor, question_id, answer_id, message, user_id):
     query = f"""
                     INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_id)
                     VALUES ({question_id}, {answer_id}, '{message}', '{submission_time}', 0, '{user_id}') 
-
             """
     cursor.execute(query)
 @database_common.connection_handler

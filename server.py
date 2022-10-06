@@ -133,11 +133,12 @@ def all_questions():
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    if request.method == 'POST':
+    if  request.method == 'POST' :
         title = request.form.get('title')
         message = request.form.get('message')
         user_id = session['id']
         id = data_manager_questions.add_question(title, message, user_id)
+        user_controller.increase_number_of_questions(user_id)
         return redirect(url_for('question', question_id=id['id']))
     return render_template('add-question.html')
 
@@ -148,6 +149,7 @@ def add_answer(question_id):
         message = request.form.get('message')
         user_id = session['id']
         data_manager_answers.write_answer(question_id, message, user_id)
+        user_controller.increase_number_of_answers(user_id)
         return redirect(url_for('question', question_id=question_id))
     return render_template('new-answer.html', question_id=question_id)
 
@@ -158,6 +160,7 @@ def comment_to_question(question_id):
         comment = request.form.get("message")
         user_id = session['id']
         data_manager_questions.write_comment(question_id, comment, user_id)
+        user_controller.increase_number_of_comments(user_id)
         return redirect("/question/" + str(question_id))
     else:
         return render_template("comment_to_question.html", question_id=question_id)
@@ -184,8 +187,6 @@ def edit_answer(answer_id):
         return redirect(url_for('question', question_id=user_answer['question_id']))
     return render_template('edit_answer.html', answer=user_answer)
 
-
-# jeszcze nie działa :<
 @app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_question_comment(comment_id):
     question_comment = data_manager_questions.get_comment_by_id(comment_id)
@@ -216,34 +217,33 @@ def delete_comment(question_id, comment_id):
 
 @app.route('/question/<int:question_id>/vote-up')
 def question_vote_up(question_id):
+    user_id = session['id']
     data_manager_questions.vote_up_on_questions(question_id)
-    data_manager_questions.get_question_by_id(question_id)
-
-    blink_url = "/question/" + str(question_id)
-    return redirect(blink_url)
-
+    user_controller.gain_reputation_questions(user_id)
+    return redirect(url_for('question', question_id=question_id))
 
 @app.route('/question/<int:question_id>/vote-down')
 def question_vote_down(question_id):
+    user_id = session['id']
     data_manager_questions.vote_down_on_questions(question_id)
-    blink_url = "/question/" + str(question_id)
-    return redirect(blink_url)
+    user_controller.lose_reputation(user_id)
+    return redirect(url_for('question', question_id=question_id))
 
 @app.route('/answer/<int:answer_id>/vote-up')
 def answer_vote_up(answer_id):
+    user_id = session['id']
     answer = data_manager_answers.get_answer(answer_id)
     data_manager_answers.vote_up_on_answer(answer_id)
-    blink_url = "/question/" + str(answer['question_id'])
-    return redirect(blink_url)
-
+    user_controller.gain_reputation_answers(user_id)
+    return redirect(url_for('question', question_id=answer['question_id']))
 
 @app.route('/answer/<int:answer_id>/vote-down')
 def answer_vote_down(answer_id):
+    user_id = session['id']
     answer = data_manager_answers.get_answer(answer_id)
     data_manager_answers.vote_down_on_answer(answer_id)
-    blink_url = "/question/" + str(answer['question_id'])
-    return redirect(blink_url)
-
+    user_controller.lose_reputation(user_id)
+    return redirect(url_for('question', question_id=answer['question_id']))
 
 @app.route('/search')
 def search():
@@ -287,6 +287,7 @@ def comment_to_answer(answer_id, question_id):
         answer_comment = request.form.get("message")
         user_id = session['id']
         data_manager_answers.add_comment_to_answer(question_id, answer_id, answer_comment, user_id)
+        user_controller.increase_number_of_comments(user_id)
         return redirect("/question/" + str(question_id))
     else:
         return render_template("comment_to_answer.html", answer_id=answer_id, question_id=question_id)
@@ -296,7 +297,22 @@ def display_users_list():
     users_list = user_controller.get_users_list()
     print(users_list)
     headers = util.USER_HEADER
-    return render_template("users.html", users_list=users_list, headers=headers)
+    if 'id' in session:
+        return render_template("users.html", users_list=users_list, headers=headers)
+    return render_template('main.html')
+
+@app.route('/users/<user_id>')
+def user_details(user_id):
+    current_user_data = user_controller.get_current_user_data(user_id)[0]
+    print(current_user_data)
+    current_user_questions = user_controller.get_current_user_questions(user_id)
+    current_user_answers = user_controller.get_current_user_answers(user_id)
+    current_user_comments = user_controller.get_current_user_comments(user_id)
+    if 'id' in session:
+        return render_template('user_profile.html', user_id=user_id, current_user_data=current_user_data,
+                                       current_user_questions=current_user_questions, current_user_answers=current_user_answers,
+                                       logged_in=True, current_user_comments=current_user_comments)
+    return render_template('main.html')
 
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1

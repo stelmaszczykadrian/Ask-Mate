@@ -90,16 +90,6 @@ def add_question(cursor, title, message, user_id):
     cursor.execute(query, {'submission_time': submission_time, 'title': title, 'message': message, 'user_id' : user_id})
     return cursor.fetchone()
 
-# @database_common.connection_handler
-# def add_new_comment(cursor, question_id, message):
-#     submission_time = util.get_time()
-#     query = """
-#         INSERT INTO comment(question_id, message, submission_time, edited_count)
-#         VALUES (%(question_id)s, %(message)s, %(submission_time)s, 0)
-#         """
-#     cursor.execute(query, {"question_id": question_id, "message": message, "submission_time": submission_time})
-
-
 @database_common.connection_handler
 def write_comment(cursor, question_id, message, user_id):
     submission_time = util.get_time()
@@ -129,7 +119,6 @@ def edit_question_comment(cursor, message, comment_id):
                     submission_time = %(submission_time)s,
                     edited_count = edited_count + 1 
                 WHERE id = %(comment_id)s
-
             """
     cursor.execute(query, {'message': message, 'comment_id': comment_id, 'submission_time': submission_time})
 
@@ -164,7 +153,6 @@ def vote_up_on_questions(cursor, question_id):
                     UPDATE question
                     SET vote_number = vote_number + 1
                     WHERE id=%(question_id)s
-
                 """
     cursor.execute(query, {'question_id': question_id})
 
@@ -175,7 +163,6 @@ def vote_down_on_questions(cursor, question_id):
                     UPDATE question
                     SET vote_number = vote_number - 1
                     WHERE id=%(question_id)s
-
                 """
     cursor.execute(query, {'question_id': question_id})
 
@@ -186,7 +173,6 @@ def count_visits(cursor, id):
                     UPDATE question
                     SET view_number = view_number + 1
                     WHERE id=%(id)s
-
                 """
     cursor.execute(query, {'id': id})
 @database_common.connection_handler
@@ -264,12 +250,3 @@ def get_tags_with_numbers(cursor):
          """
     cursor.execute(query)
     return cursor.fetchall()
-
-#Still in work
-@database_common.connection_handler
-def change_reputation(cursor, value, user_id):
-    query = """
-             UPDATE users
-             SET reputation = reputation + %(value)s
-             WHERE id = %(user_id)s;"""
-    cursor.execute(query, {'value': value ,'user_id': user_id})
