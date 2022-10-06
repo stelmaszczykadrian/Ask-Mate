@@ -1,26 +1,29 @@
-<!doctype html>
-<html lang="en">
+{% extends 'main.html' %}
+{% block title %}
+Add question
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add question</title>
-    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
-</head>
-
-<body>
+{% block body %}
 <h1>ASK MATE</h1>
+<div class="container">
     <h3>Add question</h3>
-    <form action="/add-question" method="post">
-        <p><label for="title">Title:</label><br><br>
-            <textarea id="title" name="title" rows="1" cols="60" value=""> </textarea>
-        <p><label for="message">Message:</label><br><br>
-            <textarea id="message" name="message" rows="4" cols="60" value=""></textarea><br><br>
-            <button type="submit">Save question</button>
-    </form>
 
-</body>
+  <div class="main-edit">
+ 
+      <form action="/add-question" method="post">
+         <div class="form-edit">
+            <label for="title">Title:</label>
+            <textarea class="edit-form-1" id="title" name="title" rows="1" cols="60" value=""></textarea>
+         </div>
+         <div class="form-edit-1">
+            <label for="message">Message:</label><br><br>
+            <textarea class="edit-form" id="message" name="message" rows="4" cols="60" value=""></textarea><br><br>
+         </div>   
+            <button class="btn-ask-question" type="submit">Save question</button>
+      </form>
+  </div>
 
-</html>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

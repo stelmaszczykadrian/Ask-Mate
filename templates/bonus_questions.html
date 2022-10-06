@@ -1,10 +1,12 @@
-<html>
-    <head>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/bonusQuestions.js') }}" defer></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/doNotModifyThisFile.js') }}" defer></script>
-    </head>
-    <body>
-        <h1>AskMate</h1>
+{% extends 'main.html' %}
+
+{% block title %}
+questions
+{% endblock %}
+
+{% block body %}
+<h1>AskMate</h1>
+<div class="container">
         <h2>All Questions:</h2>
         <button id="theme-button">Change Theme to Dark</button>
         <button id="increase-font-button">Increase page font</button>
@@ -35,4 +37,5 @@
             </tbody>
         </table>
     </body>
-</html>
+   </div>
+{% endblock %}

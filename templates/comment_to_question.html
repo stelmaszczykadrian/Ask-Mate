@@ -1,18 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-                <title>New comment</title>
-    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}>
-</head>
-<body>
+{% extends 'main.html' %}
+{% block title %}
+New comment
+{% endblock %}
+{% block body %}
 <h1>ASK MATE</h1>
+<div class="container">
     <h3>Post a comment:</h3>
-    <form action='{{ url_for('comment_to_question', question_id=question_id) }}' method="POST">
-        <p><label for="message">Comment:</label><br><br>
-            <textarea id="message" name="message" rows="4" cols="60"></textarea><br><br>
-            <button type="submit">Submit</button>
-    </form>
-
-</body>
-</html>
+    <div class="main-comment">
+      <form action='{{ url_for('comment_to_question', question_id=question_id) }}' method="POST">
+         <div class="form-comment">
+               <label class="form-edit-label" for="message">Comment:</label>
+               <textarea class="edit-form" id="message" name="message" rows="4" cols="60"></textarea>
+         </div>
+         <button class="btn-form" type="submit">Submit</button>
+      </form>
+   </div>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
