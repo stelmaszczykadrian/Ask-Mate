@@ -1,26 +1,6 @@
 import database_common, logic
 
 QUESTION_HEADER = ['title', 'message', 'view number', 'title', 'message']
-@database_common.connection_handler
-def addUser(cursor, new_user):
-    cursor.execute("""INSERT INTO users
-                    (user_name, password, registration_date)
-                   VALUES (%(user)s, %(psw)s, %(time)s)""",
-                   {
-                       'user': new_user['user_name'],
-                       'psw': new_user['password'],
-                       'time': new_user['registration_date'],
-                   })
-
-@database_common.connection_handler
-def get_user_password(cursor, user_name):
-    cursor.execute("""SELECT id, password FROM users
-                        WHERE user_name = %(username)s""",
-                   {
-                       'username': user_name,
-                   })
-    return cursor.fetchone()
-
 
 @database_common.connection_handler
 def get_question_data(cursor):

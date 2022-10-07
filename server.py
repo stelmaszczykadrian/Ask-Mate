@@ -19,7 +19,7 @@ def login():
     if request.method == "POST":
         user_name = request.form['email']
         password = request.form['psw']
-        user_data = data_manager_questions.get_user_password(user_name)
+        user_data = user_controller.get_user_password(user_name)
         if user_data and check_password_hash(user_data['password'], password):
             session['id'] = user_data['id']
             session['user_name'] = user_name
@@ -39,7 +39,7 @@ def registration():
             new_user['user_name'] = request.form['email']
             new_user['password'] = hash
             new_user['registration_date'] = logic.get_time()
-            data_manager_questions.addUser(new_user)
+            user_controller.addUser(new_user)
             if new_user:
                 flash("You have successfully registered!", category="success")
                 return redirect(url_for('login'))
