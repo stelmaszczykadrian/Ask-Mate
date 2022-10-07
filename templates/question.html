@@ -7,7 +7,15 @@ question
 <h1>ASK MATE</h1>
 <div class="container">
     <div class="question-title">{{ question['title']}}</div>
+    <div class="question-items">
         <div>Votes:{{ question['vote_number']}}</div>
+        <div class="question-tag">
+         {% for tag in tags %}
+         {{ tag['name'] }}
+         <a class="tag-link"href="{{ url_for('delete_tag_from_question', question_id=question_id, tag_id=tag['id']) }}">x</a>
+         {% endfor %}
+         </div>
+      </div>
         <div class="question-message">{{ question['message']}}</div>
         <div class="question-message-item"></div>
         <div class="comment"><span>Comments to question:</span>
@@ -65,10 +73,7 @@ question
         <form class="block-btn-form" action="{{ url_for('comment_to_question',question_id=question['id']) }}">
             <button class="btn-block-button" type="submit">Add comment question</button>
         </form>
-        {% for tag in tags %}
-        {{ tag['name'] }}
-        <a href="{{ url_for('delete_tag_from_question', question_id=question_id, tag_id=tag['id']) }}">X</a>
-        {% endfor %}
+        
         <form class="block-btn-form" action="{{ url_for('add_tag_to_question', question_id=question_id) }}">
             <button class="btn-block-button" id="home" type="submit" class="view">Add tag</button>
         </form>

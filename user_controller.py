@@ -1,7 +1,6 @@
 import database_common
-from psycopg2 import sql
-from psycopg2.extras import RealDictCursor
 
+USER_HEADER = ['id', 'username', 'registration date', 'asked_questions', 'answers', 'comments', 'reputation']
 @database_common.connection_handler
 def get_current_user_id(cursor, email):
     cursor.execute(f"""
@@ -113,8 +112,6 @@ def lose_reputation(cursor, user_id):
              SET reputation = reputation - 2
              WHERE id = %(user_id)s;"""
     cursor.execute(query, {'user_id': user_id})
-
-
 
 @database_common.connection_handler
 def change_accepted_state(cursor, answer_id):

@@ -243,6 +243,26 @@ h1 {
    font-weight: 500;
    letter-spacing: 2px;
 }
+
+.question-tag{
+   display: flex;
+   margin-left: 20px;
+   background-color: #c0e4fd;
+}
+
+.tag-link{
+   text-decoration: none;
+   margin-left: 5px;
+   font-weight: 700;
+   color: #1a1a1a;
+   
+   
+}
+
+.question-items{
+   display: flex;
+   margin-bottom: 10px;
+}
 /*==============Nav bar============================*/
 .nav_bar{
    position: fixed;

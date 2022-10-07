@@ -1,8 +1,5 @@
-import database_common
-from psycopg2 import sql
-from psycopg2.extras import RealDictCursor
+import database_common, logic
 
-import util
 ANSWER_HEADER = ['submission_time', 'vote_number', 'question_id', 'message']
 
 @database_common.connection_handler
@@ -57,7 +54,7 @@ def get_answer(cursor, id):
 
 @database_common.connection_handler
 def write_answer(cursor, question_id, message, user_id):
-    submission_time = util.get_time()
+    submission_time = logic.get_time()
     vote_number = 0
     image = ''
     query = """
@@ -116,7 +113,7 @@ def get_search_result_answers(cursor, search_phrase):
 
 @database_common.connection_handler
 def write_comment_to_answer(cursor, answer_id, message, user_id):
-    submission_time = util.get_time()
+    submission_time = logic.get_time()
     edited_count = 0
     query = """
     INSERT INTO comment (answer_id, message, submission_time, edited_count, user_id) 
@@ -135,7 +132,7 @@ def get_answers_comments(cursor, answer_id):
 
 @database_common.connection_handler
 def add_comment_to_answer(cursor, question_id, answer_id, message, user_id):
-    submission_time = util.get_time()
+    submission_time = logic.get_time()
 
     query = f"""
                     INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_id)
@@ -151,14 +148,3 @@ def get_comment_data(cursor):
             """
     cursor.execute(query)
     return cursor.fetchall()
-
-# @database_common.connection_handler
-# def edit_answer_comment(cursor, message, answer_id):
-#     submission_time = util.get_time()
-#     query = """
-#                 UPDATE comment
-#                 SET message = %(message)s,
-#                 submission_time = %(submission_time)s
-#                 WHERE id = %(answer_id)s
-#             """
-#     cursor.execute(query, {'message': message, 'answer_id': answer_id, 'submission_time': submission_time})
