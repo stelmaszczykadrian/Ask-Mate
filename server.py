@@ -239,6 +239,7 @@ def accept_answer(answer_id):
 
 def function():
     pass
+pass
 
 if __name__ == "__main__":
     app.run(
