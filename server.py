@@ -237,6 +237,9 @@ def accept_answer(answer_id):
     logic.accept_answer(answer_id)
     return redirect(url_for("question", question_id=data_manager_questions.get_question_by_answer_id(answer_id)['question_id']))
 
+def function():
+    pass
+
 if __name__ == "__main__":
     app.run(
         debug=True,
