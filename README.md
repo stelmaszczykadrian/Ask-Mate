@@ -17,5 +17,8 @@ The project was created during my education at Codecool, a programming school.
   <li>Psycopg (the most popular PostgreSQL database adapter for the Python)</li>
 </ul>
 
-## :rocket: Screenshoots![as-mate3](https://user-images.githubusercontent.com/106514178/229192059-03f121fb-878f-4a7d-b6ce-b834a27cecd8.png)
-![ask-mate3](https://user-images.githubusercontent.com/106514178/229192068-10b35c7f-5ef8-4e41-a19b-45e406a647b2.png)
+## :rocket: Screenshoots!
+![as-mate3](https://user-images.githubusercontent.com/106514178/229313490-8acd5035-cb7a-4d47-a23e-1390da7c8d6a.png)
+![ask-mate3](https://user-images.githubusercontent.com/106514178/229313495-23e32f25-0c6d-47e9-8cdf-2c8659a3610d.png)
+
+
